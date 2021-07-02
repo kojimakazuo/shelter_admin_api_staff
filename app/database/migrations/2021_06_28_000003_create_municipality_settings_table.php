@@ -18,11 +18,11 @@ class CreateMunicipalitySettingsTable extends Migration
             $table->string('name')->comment('自治体名');
             $table->geometry('location')->comment('所在地');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 

@@ -22,11 +22,11 @@ class CreateStaffUsersTable extends Migration
             $table->string('phone_number')->comment('電話番号');
             $table->enum('role', ['Admin', 'General'])->comment('役割(管理者, 一般)');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 

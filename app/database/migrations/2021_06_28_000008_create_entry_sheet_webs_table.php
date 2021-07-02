@@ -27,11 +27,11 @@ class CreateEntrySheetWebsTable extends Migration
             $table->boolean('stay_in_car')->comment('車中泊');
             $table->integer('number_of_in_car')->unsigned()->comment('車中泊人数');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 

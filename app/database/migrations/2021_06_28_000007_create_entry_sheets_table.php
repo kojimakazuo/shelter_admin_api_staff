@@ -21,11 +21,11 @@ class CreateEntrySheetsTable extends Migration
             $table->string('name')->comment('代表者氏名');
             $table->string('name_kana')->comment('代表者氏名かな');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 

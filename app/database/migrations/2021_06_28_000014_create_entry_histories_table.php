@@ -20,11 +20,11 @@ class CreateEntryHistoriesTable extends Migration
             $table->enum('type', ['Entry', 'Out', 'In', 'Exit'])->comment('履歴タイプ(入場, 一時退室, 再入場, 退場)');
             $table->timestamp('occurred_at')->comment('発生日時');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 

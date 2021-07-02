@@ -23,11 +23,11 @@ class CreateEntriesTable extends Migration
             $table->datetime('exited_at')->nullable()->comment('退場日時');
             $table->enum('site_type', ['General', 'BadCondition', 'Car'])->comment('避難場所タイプ(一般, 体調不良者向け, 車中泊)');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 
