@@ -20,7 +20,8 @@ class CreateSheltersTable extends Migration
             $table->string('postal_code')->comment('郵便番号');
             $table->string('address')->comment('住所');
             $table->string('phone_number')->comment('電話番号');
-            $table->geometry('location')->comment('所在地');
+            $table->double('latitude')->comment('所在地(緯度)');
+            $table->double('longitude')->comment('所在地(経度)');
             $table->enum('type', ['Emergency', 'Normal'])->comment('避難所タイプ(緊急避難所, 避難所)');
             $table->enum('target_disaster_type', ['WindAndFlood', 'Rockfall', 'Earthquake', 'LargeScaleFire'])->comment('対象異常現象種類(風水害, がけ崩れ, 地震, 大規模火災)');
             $table->integer('capacity')->unsigned()->comment('収容可能人数');
