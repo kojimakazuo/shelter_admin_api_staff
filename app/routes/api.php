@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ShelterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +20,8 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('refresh', [AuthController::class, 'refresh']);
+    });
+    Route::group(['prefix' => 'shelters'], function ($router) {
+        Route::post('', [ShelterController::class, 'store']);
     });
 });
