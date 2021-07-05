@@ -29,12 +29,10 @@ class ShelterController extends Controller
     }
 
     /**
-     * 災害 - 新規作成
+     * 避難所 - 新規作成
      */
     public function store(ShelterStoreRequest $request)
     {
-        $shelter = new Shelter($request->fillable());
-        $shelter->save();
-        return new ShelterResource($shelter);
+        return new ShelterResource($this->shelter_service->add($request->fillable()));
     }
 }

@@ -15,4 +15,14 @@ class ShelterService
         $query->whereNull('deleted_at');
         return $query->get();
     }
+
+    /**
+     * 避難所登録
+     */
+    public function add($request)
+    {
+        $shelter = new Shelter($request->fillable());
+        $shelter->save();
+        return $shelter;
+    }
 }
