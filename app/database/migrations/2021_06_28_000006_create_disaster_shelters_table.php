@@ -26,11 +26,11 @@ class CreateDisasterSheltersTable extends Migration
             $table->bigInteger('staff_user_id')->unsigned()->comment('担当者ID');
             $table->foreign('staff_user_id')->references('id')->on('staff_users');
             $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('created_by')->useCurrent()->nullable();
+            $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
-            $table->timestamp('updated_by')->useCurrent()->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamp('deleted_by')->nullable();
+            $table->bigInteger('deleted_by')->nullable();
         });
     }
 
