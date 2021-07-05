@@ -12,7 +12,6 @@ class ShelterService
     public function find()
     {
         $query = Shelter::select('*');
-        $query->whereNull('deleted_at');
         return $query->get();
     }
 
@@ -23,7 +22,6 @@ class ShelterService
     {
         $query = Shelter::select('*');
         $query->where('id', $id);
-        $query->whereNull('deleted_at');
         return $query->first();
     }
 
