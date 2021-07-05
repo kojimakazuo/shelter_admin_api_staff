@@ -12,7 +12,6 @@ class ShelterService
     public function find()
     {
         $query = Shelter::select('*');
-        $query->whereNull('deleted_at');
         return $query->get();
     }
 
@@ -23,7 +22,6 @@ class ShelterService
     {
         $query = Shelter::select('*');
         $query->where('id', $id);
-        $query->whereNull('deleted_at');
         return $query->first();
     }
 
@@ -49,5 +47,18 @@ class ShelterService
         $shelter->fill($request);
         $shelter->save();
         return $shelter;
+    }
+
+    /**
+     * 避難所削除
+     */
+    public function delete($id)
+    {
+        $shelter = $this->show($id);
+        if (empty($shelter)) {
+            return;
+        }
+        $shelter->deleted_by = auth()->user()->id;
+        return $shelter->delete();
     }
 }

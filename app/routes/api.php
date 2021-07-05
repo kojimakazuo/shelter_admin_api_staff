@@ -26,5 +26,6 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::get('/{id}', [ShelterController::class, 'show']);
         Route::post('', [ShelterController::class, 'store']);
         Route::put('/{id}', [ShelterController::class, 'update']);
+        Route::delete('/{id}', [ShelterController::class, 'destroy']);
     });
 });

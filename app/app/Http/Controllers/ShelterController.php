@@ -59,4 +59,15 @@ class ShelterController extends Controller
         }
         return new ShelterResource($shelter);
     }
+
+    /**
+     * 避難所 - 削除
+     */
+    public function destroy($id)
+    {
+        $shelter = $this->shelter_service->delete($id);
+        if (empty($shelter)) {
+            throw new NotFoundHttpException('not found');
+        }
+    }
 }
