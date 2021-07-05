@@ -22,6 +22,7 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::get('refresh', [AuthController::class, 'refresh']);
     });
     Route::group(['prefix' => 'shelters'], function ($router) {
+        Route::get('', [ShelterController::class, 'index']);
         Route::post('', [ShelterController::class, 'store']);
     });
 });
