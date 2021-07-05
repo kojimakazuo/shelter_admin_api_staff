@@ -36,4 +36,18 @@ class ShelterService
         $shelter->save();
         return $shelter;
     }
+
+    /**
+     * 避難所更新
+     */
+    public function update($request, $id)
+    {
+        $shelter = $this->show($id);
+        if (empty($shelter)) {
+            return;
+        }
+        $shelter->fill($request);
+        $shelter->save();
+        return $shelter;
+    }
 }

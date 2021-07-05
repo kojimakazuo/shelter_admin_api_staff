@@ -47,4 +47,16 @@ class ShelterController extends Controller
     {
         return new ShelterResource($this->shelter_service->add($request->fillable()));
     }
+
+    /**
+     * 避難所 - 更新
+     */
+    public function update(ShelterStoreRequest $request, $id)
+    {
+        $shelter = $this->shelter_service->update($request->fillable(), $id);
+        if (empty($shelter)) {
+            throw new NotFoundHttpException('not found');
+        }
+        return new ShelterResource($shelter);
+    }
 }
