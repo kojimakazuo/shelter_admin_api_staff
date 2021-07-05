@@ -23,6 +23,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     });
     Route::group(['prefix' => 'shelters'], function ($router) {
         Route::get('', [ShelterController::class, 'index']);
+        Route::get('/{id}', [ShelterController::class, 'show']);
         Route::post('', [ShelterController::class, 'store']);
     });
 });
