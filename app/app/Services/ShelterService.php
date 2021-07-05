@@ -48,4 +48,17 @@ class ShelterService
         $shelter->save();
         return $shelter;
     }
+
+    /**
+     * 避難所削除
+     */
+    public function delete($id)
+    {
+        $shelter = $this->show($id);
+        if (empty($shelter)) {
+            return;
+        }
+        $shelter->deleted_by = auth()->user()->id;
+        return $shelter->delete();
+    }
 }
