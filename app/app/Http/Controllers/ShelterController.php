@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ShelterStoreRequest;
 use App\Http\Resources\ShelterCollection;
 use App\Http\Resources\ShelterResource;
-use App\Models\Shelter;
 use App\Services\ShelterService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShelterController extends Controller
 {
@@ -26,6 +26,18 @@ class ShelterController extends Controller
         return new ShelterCollection([
             'shelters' => $this->shelter_service->find(),
         ]);
+    }
+
+    /**
+     * 避難所詳細
+     */
+    public function show($id)
+    {
+        $shelter = $this->shelter_service->show($id);
+        if (empty($shelter)) {
+            throw new NotFoundHttpException('not found');
+        }
+        return new ShelterResource($shelter);
     }
 
     /**

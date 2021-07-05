@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ShelterResource extends JsonResource
 {
+    public static $wrap = null;
+
     public function toArray($request)
     {
         return [
@@ -21,7 +23,7 @@ class ShelterResource extends JsonResource
             'target_disaster_type' => $this->target_disaster_type,
             'capacity' => $this->capacity,
             'facility_info' => $this->facility_info,
-            'staff_user_id' => $this->staff_user_id,
+            'staff_user' => new StaffUserResource($this->staffUser),
         ];
     }
 }

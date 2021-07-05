@@ -23,4 +23,9 @@ class Shelter extends Model
             $model->updated_by = auth()->id();
         });
     }
+
+    public function staffUser()
+    {
+        return $this->belongsTo(StaffUser::class);
+    }
 }

@@ -17,11 +17,22 @@ class ShelterService
     }
 
     /**
+     * 避難所詳細
+     */
+    public function show($id)
+    {
+        $query = Shelter::select('*');
+        $query->where('id', $id);
+        $query->whereNull('deleted_at');
+        return $query->first();
+    }
+
+    /**
      * 避難所登録
      */
     public function add($request)
     {
-        $shelter = new Shelter($request->fillable());
+        $shelter = new Shelter($request);
         $shelter->save();
         return $shelter;
     }
