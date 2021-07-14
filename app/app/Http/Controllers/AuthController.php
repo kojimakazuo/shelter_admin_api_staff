@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\AuthCollection;
+use Illuminate\Cookie\CookieJar;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -16,13 +17,17 @@ class AuthController extends Controller
         $this->middleware('auth', ['except' => ['login', 'refresh']]);
     }
 
-    public function login()
+    public function login(Request $request, CookieJar $cookie)
     {
         $credentials = request(['login_id', 'password']);
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        return $this->respondWithToken($token);
+        if ($request['type'] == 'cookie') {
+            return $this->respondWithCookie($request, $cookie, $token);
+        } else {
+            return $this->respondWithToken($token);
+        }
     }
 
     public function logout(Request $request)
@@ -30,10 +35,15 @@ class AuthController extends Controller
         auth()->logout();
     }
 
-    public function refresh()
+    public function refresh(Request $request, CookieJar $cookie)
     {
         try {
-            return $this->respondWithToken(auth()->refresh());
+            $token = auth()->refresh();
+            if ($request['type'] == 'cookie') {
+                return $this->respondWithCookie($request, $cookie, $token);
+            } else {
+                return $this->respondWithToken($token);
+            }
         } catch (TokenBlackListedException | TokenExpiredException | TokenInvalidException | JWTException $e) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -47,5 +57,18 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()
         ]);
+    }
+
+    protected function respondWithCookie(Request $request, CookieJar $cookie, $token)
+    {
+        return response()->json([], 200)->withCookie($cookie->make(
+            config('cookie.token.key'),
+            $token,
+            config('cookie.token.expire'),
+            config('cookie.token.path'),
+            config('cookie.token.domain'),
+            $request->getScheme() === config('cookie.token.scheme'),
+            config('cookie.token.http_only')
+        ));
     }
 }
