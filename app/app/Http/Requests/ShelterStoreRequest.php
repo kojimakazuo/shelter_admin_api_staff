@@ -14,7 +14,7 @@ class ShelterStoreRequest extends FormRequest
         return [
             'name'  => 'required|max:255',
             'name_kana'  => 'required|max:255|hiragana',
-            'postal_code' => 'required|max:7',
+            'postal_code' => 'required|max:8',
             'address' => 'required|max:255',
             'phone_number' => 'required|max:13',
             'latitude' => 'required|numeric',
@@ -40,7 +40,7 @@ class ShelterStoreRequest extends FormRequest
             'name_kana.max'  => ':attributeが長すぎます',
             'name_kana.hiragana'  => ':attributeはひらがなで入力してください',
             'postal_code.required' => ':attributeは必須です',
-            'postal_code.max'  => ':attributeは7文字で入力してください',
+            'postal_code.max'  => ':attributeは8文字以下で入力してください',
             'address.required' => ':attributeは必須です',
             'address.max'  => ':attributeが長すぎます',
             'phone_number.required' => ':attributeは必須です',
