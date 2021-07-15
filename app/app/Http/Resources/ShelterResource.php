@@ -20,7 +20,7 @@ class ShelterResource extends JsonResource
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'type' => $this->type,
-            'target_disaster_type' => $this->target_disaster_type,
+            'target_disaster_types' => $this->target_disaster_types,
             'capacity' => $this->capacity,
             'facility_info' => $this->facility_info,
             'staff_user' => new StaffUserResource($this->staffUser),
