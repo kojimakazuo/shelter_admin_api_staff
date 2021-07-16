@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\StaffUserController;
 
@@ -28,6 +29,13 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('', [ShelterController::class, 'store']);
         Route::put('/{id}', [ShelterController::class, 'update']);
         Route::delete('/{id}', [ShelterController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'notices'], function ($router) {
+        Route::get('', [NoticeController::class, 'index']);
+        Route::get('/{id}', [NoticeController::class, 'show']);
+        Route::post('', [NoticeController::class, 'store']);
+        Route::put('/{id}', [NoticeController::class, 'update']);
+        Route::delete('/{id}', [NoticeController::class, 'destroy']);
     });
     Route::group(['prefix' => 'staff_users'], function ($router) {
         Route::get('', [StaffUserController::class, 'index']);
