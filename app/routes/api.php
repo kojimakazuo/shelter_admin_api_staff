@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ShelterController;
+use App\Http\Controllers\StaffUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +28,12 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('', [ShelterController::class, 'store']);
         Route::put('/{id}', [ShelterController::class, 'update']);
         Route::delete('/{id}', [ShelterController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'staff_users'], function ($router) {
+        Route::get('', [StaffUserController::class, 'index']);
+        Route::get('/{id}', [StaffUserController::class, 'show']);
+        Route::post('', [StaffUserController::class, 'store']);
+        Route::put('/{id}', [StaffUserController::class, 'update']);
+        Route::delete('/{id}', [StaffUserController::class, 'destroy']);
     });
 });

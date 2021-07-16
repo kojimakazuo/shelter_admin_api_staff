@@ -29,7 +29,7 @@ class ShelterController extends Controller
     }
 
     /**
-     * 避難所詳細
+     * 避難所 - 詳細
      */
     public function show($id)
     {

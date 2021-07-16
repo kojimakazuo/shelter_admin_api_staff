@@ -25,7 +25,7 @@ class CreateSheltersTable extends Migration
             $table->enum('type', ['Emergency', 'Normal'])->comment('避難所タイプ(緊急避難所, 避難所)');
             $table->set('target_disaster_types', ['WindAndFlood', 'Rockfall', 'Earthquake', 'LargeScaleFire'])->comment('対象異常現象種類(風水害, がけ崩れ, 地震, 大規模火災)');
             $table->integer('capacity')->unsigned()->comment('収容可能人数');
-            $table->text('facility_info')->comment('設備情報');
+            $table->text('facility_info')->nullable()->comment('設備情報');
             $table->bigInteger('staff_user_id')->unsigned()->comment('担当者ID');
             $table->foreign('staff_user_id')->references('id')->on('staff_users');
             $table->timestamp('created_at')->useCurrent()->nullable();
