@@ -5,6 +5,9 @@ RUN apt-get update \
     && apt-get install -y zlib1g-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql zip
 
+RUN pecl install xdebug \
+  && docker-php-ext-enable xdebug
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html/app
+WORKDIR /var/www
