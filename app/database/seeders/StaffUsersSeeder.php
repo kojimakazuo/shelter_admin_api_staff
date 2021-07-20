@@ -22,6 +22,8 @@ class StaffUsersSeeder extends Seeder
                 'name_kana' => 'かんりしゃ',
                 'phone_number' => '03-0000-0000',
                 'role' => 'Admin',
+                'created_by' => 1,
+                'updated_by' => 1,
             ],
             [
                 'login_id' => 'user',
@@ -30,6 +32,8 @@ class StaffUsersSeeder extends Seeder
                 'name_kana' => 'いっぱんゆーざ',
                 'phone_number' => '03-0000-0000',
                 'role' => 'General',
+                'created_by' => 1,
+                'updated_by' => 1,
             ]
         ]);
     }

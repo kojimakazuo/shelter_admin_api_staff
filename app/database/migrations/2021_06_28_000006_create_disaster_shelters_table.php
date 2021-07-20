@@ -19,7 +19,6 @@ class CreateDisasterSheltersTable extends Migration
             $table->foreign('disaster_id')->references('id')->on('disasters');
             $table->bigInteger('shelter_id')->unsigned()->comment('避難所ID');
             $table->foreign('shelter_id')->references('id')->on('shelters');
-            $table->string('title')->comment('タイトル');
             $table->integer('capacity')->unsigned()->comment('収容可能人数');
             $table->datetime('start_at')->comment('開始日時');
             $table->datetime('end_at')->nullable()->comment('終了日時');
