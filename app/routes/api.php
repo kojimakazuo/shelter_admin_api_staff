@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DisasterController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\StaffUserController;
@@ -22,6 +23,13 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('refresh', [AuthController::class, 'refresh']);
+    });
+    Route::group(['prefix' => 'disasters'], function ($router) {
+        Route::get('', [DisasterController::class, 'index']);
+        Route::get('/{id}', [DisasterController::class, 'show']);
+        Route::post('', [DisasterController::class, 'store']);
+        Route::put('/{id}', [DisasterController::class, 'update']);
+        Route::delete('/{id}', [DisasterController::class, 'destroy']);
     });
     Route::group(['prefix' => 'shelters'], function ($router) {
         Route::get('', [ShelterController::class, 'index']);

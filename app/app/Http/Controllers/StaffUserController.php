@@ -6,7 +6,6 @@ use App\Http\Requests\StaffUserStoreRequest;
 use App\Http\Resources\StaffUserCollection;
 use App\Http\Resources\StaffUserResource;
 use App\Services\StaffUserService;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StaffUserController extends Controller
