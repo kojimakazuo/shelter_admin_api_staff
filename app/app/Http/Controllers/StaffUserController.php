@@ -45,7 +45,6 @@ class StaffUserController extends Controller
      */
     public function store(StaffUserStoreRequest $request)
     {
-        var_dump($request->fillable());
         return new StaffUserResource($this->staff_user_service->add($request->fillable()));
     }
 
@@ -54,7 +53,6 @@ class StaffUserController extends Controller
      */
     public function update(StaffUserStoreRequest $request, $id)
     {
-        var_dump($request->fillable());
         $staff_user = $this->staff_user_service->update($request->fillable(), $id);
         if (empty($staff_user)) {
             throw new NotFoundHttpException('not found');
