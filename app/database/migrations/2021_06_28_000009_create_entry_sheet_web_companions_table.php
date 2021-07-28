@@ -21,7 +21,7 @@ class CreateEntrySheetWebCompanionsTable extends Migration
             $table->string('name_kana')->comment('氏名かな');
             $table->date('birthday')->comment('生年月日');
             $table->enum('gender', ['Male', 'Female'])->comment('性別');
-            $table->float('temperature')->comment('体温');
+            $table->float('temperature')->nullable()->comment('体温');
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();

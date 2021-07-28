@@ -25,7 +25,7 @@ class ValidateServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extend('hiragana', function ($attribute, $value, $parameters, $validator) {
-            return preg_match('/[ぁ-ん]+/u', $value);
+            return !preg_match('/[^ぁ-んー\s]/u', $value);
         });
     }
 }

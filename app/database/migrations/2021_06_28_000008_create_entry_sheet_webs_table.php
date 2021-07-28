@@ -19,7 +19,7 @@ class CreateEntrySheetWebsTable extends Migration
             $table->foreign('entry_sheet_id')->references('id')->on('entry_sheets');
             $table->date('birthday')->comment('代表者生年月日');
             $table->enum('gender', ['Male', 'Female'])->comment('代表者性別');
-            $table->float('temperature')->comment('代表者体温');
+            $table->float('temperature')->nullable()->comment('代表者体温');
             $table->string('postal_code')->comment('代表者郵便番号');
             $table->string('address')->comment('代表者住所');
             $table->string('phone_number')->comment('代表者電話番号');
