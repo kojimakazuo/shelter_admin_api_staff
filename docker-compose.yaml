@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nginx:
-    container_name: shleter-admin-api-nginx
+    container_name: shelter-admin-api-nginx
     hostname: shelter-admin-api
     image: nginx
     ports:
@@ -15,7 +15,7 @@ services:
     networks:
       - container-link
   php:
-    container_name: shleter-admin-api-php
+    container_name: shelter-admin-api-php
     hostname: shelter-admin-php
     build: ./docker/php
     volumes:
@@ -27,7 +27,7 @@ services:
     networks:
       - container-link
   db:
-    container_name: shleter-db
+    container_name: shelter-db
     image: mariadb:10.5.8
     ports:
       - 3306:3306
