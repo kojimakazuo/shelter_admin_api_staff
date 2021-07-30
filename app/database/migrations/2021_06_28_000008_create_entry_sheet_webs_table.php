@@ -25,7 +25,7 @@ class CreateEntrySheetWebsTable extends Migration
             $table->string('phone_number')->comment('代表者電話番号');
             $table->enum('companion', ['None', 'Family', 'Other'])->comment('同行者(なし, 家族, その他)');
             $table->boolean('stay_in_car')->comment('車中泊');
-            $table->integer('number_of_in_car')->unsigned()->comment('車中泊人数');
+            $table->integer('number_of_in_car')->unsigned()->nullable()->comment('車中泊人数');
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
