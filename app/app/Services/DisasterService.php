@@ -86,6 +86,17 @@ class DisasterService
     }
 
     /**
+     * 現在発生中の災害詳細
+     */
+    public function current()
+    {
+        $query = Disaster::select('*');
+        $query->where('start_at', '<=', now()); // 開始日が現在日時以降
+        $query->whereNull('end_at'); // 終了していない
+        return $query->first();
+    }
+
+    /**
      * 災害避難所詳細
      */
     public function showShelter($id)
