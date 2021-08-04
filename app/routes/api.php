@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DisasterController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\StaffUserController;
@@ -19,6 +20,9 @@ use App\Http\Controllers\StaffUserController;
 */
 
 Route::group(['middleware' => 'api'], function ($router) {
+    Route::group(['prefix' => 'home'], function ($router) {
+        Route::get('', [HomeController::class, 'index']);
+    });
     Route::group(['prefix' => 'auth'], function ($router) {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('logout', [AuthController::class, 'logout']);
