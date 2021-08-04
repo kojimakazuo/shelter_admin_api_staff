@@ -17,6 +17,11 @@ class Disaster extends Model
         'id',
     ];
 
+    protected $casts = [
+        'start_at'  => 'datetime',
+        'end_at' => 'datetime',
+    ];
+
     public function disasterShelters()
     {
         return $this->hasMany(DisasterShelter::class);

@@ -19,6 +19,11 @@ class DisasterShelter extends Model
         'shelter_id',
     ];
 
+    protected $casts = [
+        'start_at'  => 'datetime',
+        'end_at' => 'datetime',
+    ];
+
     public function shelter()
     {
         return $this->hasOne(Shelter::class, 'id', 'shelter_id');
