@@ -53,3 +53,15 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::delete('/{id}', [StaffUserController::class, 'destroy']);
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| API Routes - アプリ専用
+|--------------------------------------------------------------------------
+*/
+
+Route::group(['middleware' => 'api', 'prefix' => 'app'], function ($router) {
+    Route::group(['prefix' => 'home'], function ($router) {
+        Route::get('', [HomeController::class, 'index']);
+    });
+});
