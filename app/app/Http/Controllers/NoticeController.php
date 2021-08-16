@@ -6,7 +6,6 @@ use App\Http\Requests\NoticeStoreRequest;
 use App\Http\Resources\NoticeCollection;
 use App\Http\Resources\NoticeResource;
 use App\Services\NoticeService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class NoticeController extends Controller
 {
@@ -35,7 +34,7 @@ class NoticeController extends Controller
     {
         $notice = $this->notice_service->show($id);
         if (empty($notice)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new NoticeResource($notice);
     }
@@ -55,7 +54,7 @@ class NoticeController extends Controller
     {
         $notice = $this->notice_service->update($request->fillable(), $id);
         if (empty($notice)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new NoticeResource($notice);
     }
@@ -67,7 +66,7 @@ class NoticeController extends Controller
     {
         $notice = $this->notice_service->delete($id);
         if (empty($notice)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
     }
 }

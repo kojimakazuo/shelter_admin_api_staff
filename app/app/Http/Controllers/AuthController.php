@@ -21,7 +21,7 @@ class AuthController extends Controller
     {
         $credentials = request(['login_id', 'password']);
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->unauthorized();
         }
         if ($request['type'] == 'cookie') {
             return $this->respondWithCookie($request, $cookie, $token);
@@ -45,7 +45,7 @@ class AuthController extends Controller
                 return $this->respondWithToken($token);
             }
         } catch (TokenBlackListedException | TokenExpiredException | TokenInvalidException | JWTException $e) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->unauthorized();
         }
     }
 

@@ -7,7 +7,6 @@ use App\Http\Requests\DisasterUpdateRequest;
 use App\Http\Resources\DisasterCollection;
 use App\Http\Resources\DisasterResource;
 use App\Services\DisasterService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DisasterController extends Controller
 {
@@ -36,7 +35,7 @@ class DisasterController extends Controller
     {
         $disaster = $this->disaster_service->current();
         if (empty($disaster)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new DisasterResource($disaster);
     }
@@ -48,7 +47,7 @@ class DisasterController extends Controller
     {
         $disaster = $this->disaster_service->show($id);
         if (empty($disaster)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new DisasterResource($disaster);
     }
@@ -68,7 +67,7 @@ class DisasterController extends Controller
     {
         $disaster = $this->disaster_service->update($request->fillable(), $id);
         if (empty($disaster)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new DisasterResource($disaster);
     }
@@ -80,7 +79,7 @@ class DisasterController extends Controller
     {
         $disaster = $this->disaster_service->delete($id);
         if (empty($disaster)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
     }
 }
