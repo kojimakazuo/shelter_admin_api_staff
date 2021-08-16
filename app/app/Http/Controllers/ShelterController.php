@@ -6,7 +6,6 @@ use App\Http\Requests\ShelterStoreRequest;
 use App\Http\Resources\ShelterCollection;
 use App\Http\Resources\ShelterResource;
 use App\Services\ShelterService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShelterController extends Controller
 {
@@ -35,7 +34,7 @@ class ShelterController extends Controller
     {
         $shelter = $this->shelter_service->show($id);
         if (empty($shelter)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new ShelterResource($shelter);
     }
@@ -55,7 +54,7 @@ class ShelterController extends Controller
     {
         $shelter = $this->shelter_service->update($request->fillable(), $id);
         if (empty($shelter)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new ShelterResource($shelter);
     }
@@ -67,7 +66,7 @@ class ShelterController extends Controller
     {
         $shelter = $this->shelter_service->delete($id);
         if (empty($shelter)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
     }
 }

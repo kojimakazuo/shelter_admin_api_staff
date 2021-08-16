@@ -6,7 +6,6 @@ use App\Http\Requests\StaffUserStoreRequest;
 use App\Http\Resources\StaffUserCollection;
 use App\Http\Resources\StaffUserResource;
 use App\Services\StaffUserService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StaffUserController extends Controller
 {
@@ -35,7 +34,7 @@ class StaffUserController extends Controller
     {
         $staff_user = $this->staff_user_service->show($id);
         if (empty($staff_user)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new StaffUserResource($staff_user);
     }
@@ -55,7 +54,7 @@ class StaffUserController extends Controller
     {
         $staff_user = $this->staff_user_service->update($request->fillable(), $id);
         if (empty($staff_user)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
         return new StaffUserResource($staff_user);
     }
@@ -67,7 +66,7 @@ class StaffUserController extends Controller
     {
         $staff_user = $this->staff_user_service->delete($id);
         if (empty($staff_user)) {
-            throw new NotFoundHttpException('not found');
+            return response()->notfound();
         }
     }
 }
