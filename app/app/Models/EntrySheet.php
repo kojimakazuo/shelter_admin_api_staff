@@ -16,4 +16,9 @@ class EntrySheet extends Model
     protected $guarded = [
         'id',
     ];
+
+    public function web()
+    {
+        return $this->hasOne(EntrySheetWeb::class);
+    }
 }

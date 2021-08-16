@@ -20,4 +20,14 @@ class EntrySheetWeb extends Model
     protected $casts = [
         'birthday'  => 'date',
     ];
+
+    public function entrySheet()
+    {
+        return $this->belongsTo(EntrySheet::class);
+    }
+
+    public function companions()
+    {
+        return $this->hasMany(EntrySheetWebCompanion::class);
+    }
 }
