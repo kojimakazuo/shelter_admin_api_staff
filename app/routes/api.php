@@ -12,11 +12,6 @@ use App\Http\Controllers\StaffUserController;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
 Route::group(['middleware' => 'api'], function ($router) {
@@ -30,6 +25,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     });
     Route::group(['prefix' => 'disasters'], function ($router) {
         Route::get('', [DisasterController::class, 'index']);
+        Route::get('/current', [DisasterController::class, 'current']);
         Route::get('/{id}', [DisasterController::class, 'show']);
         Route::post('', [DisasterController::class, 'store']);
         Route::put('/{id}', [DisasterController::class, 'update']);

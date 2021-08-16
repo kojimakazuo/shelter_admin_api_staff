@@ -30,6 +30,18 @@ class DisasterController extends Controller
     }
 
     /**
+     * 災害 - 現在発生中の災害
+     */
+    public function current()
+    {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            throw new NotFoundHttpException('not found');
+        }
+        return new DisasterResource($disaster);
+    }
+
+    /**
      * 災害 - 詳細
      */
     public function show($id)
