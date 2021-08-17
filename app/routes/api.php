@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DisasterController;
+use App\Http\Controllers\DisasterEntryController;
 use App\Http\Controllers\DisasterEntrySheetController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoticeController;
@@ -33,6 +34,9 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::delete('/{id}', [DisasterController::class, 'destroy']);
         Route::group(['prefix' => 'entry_sheets'], function ($router) {
             Route::get('web/{id}', [DisasterEntrySheetController::class, 'web']);
+        });
+        Route::group(['prefix' => 'entry'], function ($router) {
+            Route::post('web', [DisasterEntryController::class, 'web']);
         });
     });
     Route::group(['prefix' => 'shelters'], function ($router) {

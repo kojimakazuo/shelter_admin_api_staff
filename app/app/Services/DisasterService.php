@@ -31,6 +31,7 @@ class DisasterService
      */
     public function add($request)
     {
+        // TODO: transaction
         $disaster = new Disaster($request);
         $disaster->save();
         $this->addShelters($disaster, $request['shelters'], 'id');
@@ -42,6 +43,7 @@ class DisasterService
      */
     public function update($request, $id)
     {
+        // TODO: transaction
         $disaster = $this->show($id);
         if (empty($disaster)) {
             return;
@@ -94,6 +96,15 @@ class DisasterService
         $query->where('start_at', '<=', now()); // 開始日が現在日時以降
         $query->whereNull('end_at'); // 終了していない
         return $query->first();
+    }
+
+    /**
+     * 現在発生中の災害か否か
+     */
+    public function isOccurring($id)
+    {
+        $current = $this->current();
+        return isset($current) ? $current->id == $id : false;
     }
 
     /**

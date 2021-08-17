@@ -20,4 +20,9 @@ class EntryHistory extends Model
     protected $casts = [
         'occurred_at'  => 'datetime',
     ];
+
+    public function entry()
+    {
+        return $this->belongsTo(Entry::class);
+    }
 }
