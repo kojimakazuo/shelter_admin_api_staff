@@ -21,4 +21,14 @@ class Entry extends Model
         'enterd_at'  => 'datetime',
         'exited_at' => 'datetime',
     ];
+
+    public function entrySheet()
+    {
+        return $this->belongsTo(EntrySheet::class);
+    }
+
+    public function EntryHistories()
+    {
+        return $this->hasMany(EntryHistory::class);
+    }
 }
