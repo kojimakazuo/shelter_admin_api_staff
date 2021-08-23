@@ -17,6 +17,27 @@ class DisasterEntryService
     }
 
     /**
+     * 災害受付一覧
+     */
+    public function find($disaster_id, $disaster_shelter_id, $enterd_at_from, $name_kana)
+    {
+        $query = Entry::select('entries.*');
+        $query->join('entry_sheets','entry_sheets.id','=','entries.entry_sheet_id');
+        $query->where('disaster_id', $disaster_id);
+        if (!empty($disaster_shelter_id)) {
+            $query->where('disaster_shelter_id', $disaster_shelter_id);
+        }
+        if (!empty($enterd_at_from)) {
+            $query->where('enterd_at', '>=' , $enterd_at_from);
+        }
+        if (!empty($name_kana)) {
+            $query->where('name_kana', 'like', "$name_kana%");
+        }
+        $query->orderBy('entries.id', 'asc');
+        return $query->paginate(50);
+    }
+
+    /**
      * 災害受付
      */
     public function entry($request)

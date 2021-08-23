@@ -17,6 +17,7 @@ class DisasterEntryResource extends JsonResource
             'enterd_at' => $this->enterd_at->format('Y-m-d\TH:i:s'),
             'exited_at' => optional($this->exited_at)->format('Y-m-d\TH:i:s'),
             'site_type' => $this->site_type,
+            'entry_sheet' => new DisasterEntrySheetResource($this->entrySheet),
         ];
     }
 }
