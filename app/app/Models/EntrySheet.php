@@ -17,6 +17,11 @@ class EntrySheet extends Model
         'id',
     ];
 
+    public function entry()
+    {
+        return $this->hasOne(Entry::class);
+    }
+
     public function web()
     {
         return $this->hasOne(EntrySheetWeb::class);

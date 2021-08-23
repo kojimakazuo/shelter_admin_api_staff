@@ -27,7 +27,7 @@ class Entry extends Model
         return $this->belongsTo(EntrySheet::class);
     }
 
-    public function EntryHistories()
+    public function histories()
     {
         return $this->hasMany(EntryHistory::class);
     }

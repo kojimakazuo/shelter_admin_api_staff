@@ -44,4 +44,49 @@ class DisasterEntryController extends Controller
         $entry = $this->disaster_entry_service->entry($request->fillable());
         return new DisasterEntryResource($entry);
     }
+
+    /**
+     * 災害 - 受付 - 一時退室
+     */
+    public function out($id)
+    {
+        $entry = $this->disaster_entry_service->show($id);
+        if (empty($entry)) {
+            return response()->notfound();
+        }
+        if (!empty($entry->exited_at)) {
+            return response()->badrequest(null, 'この避難者はすでに退場済です');
+        }
+        $this->disaster_entry_service->out($id);
+    }
+
+    /**
+     * 災害 - 受付 - 再入場
+     */
+    public function in($id)
+    {
+        $entry = $this->disaster_entry_service->show($id);
+        if (empty($entry)) {
+            return response()->notfound();
+        }
+        if (!empty($entry->exited_at)) {
+            return response()->badrequest(null, 'この避難者はすでに退場済です');
+        }
+        $this->disaster_entry_service->in($id);
+    }
+
+    /**
+     * 災害 - 受付 - 退場
+     */
+    public function exit($id)
+    {
+        $entry = $this->disaster_entry_service->show($id);
+        if (empty($entry)) {
+            return response()->notfound();
+        }
+        if (!empty($entry->exited_at)) {
+            return response()->badrequest(null, 'この避難者はすでに退場済です');
+        }
+        $this->disaster_entry_service->exit($id);
+    }
 }

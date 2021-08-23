@@ -31,7 +31,7 @@ class DisasterEntryService
             $entry_history = new EntryHistory($request);
             $entry_history->type = EntryHistoryType::ENTRY;
             $entry_history->occurred_at = $enterd_at;
-            $entry->EntryHistories()->save($entry_history);
+            $entry->histories()->save($entry_history);
             $this->disaster_entry_sheet_service->updateTemperatures($request['entry_sheet_id'], $request['temperature'], $request['companions']);
             return $entry;
         });
@@ -56,5 +56,50 @@ class DisasterEntryService
         $query = Entry::select('*');
         $query->where('entry_sheet_id', $id);
         return $query->first();
+    }
+
+    /**
+     * 災害受付 - 一時退室
+     */
+    public function out($id)
+    {
+        $entry = $this->show($id);
+        $entry_history = new EntryHistory();
+        $entry_history->type = EntryHistoryType::OUT;
+        $entry_history->occurred_at = now();
+        return $entry->histories()->save($entry_history);
+    }
+
+    /**
+     * 災害受付 - 再入場
+     */
+    public function in($id)
+    {
+        $entry = $this->show($id);
+        $entry_history = new EntryHistory();
+        $entry_history->type = EntryHistoryType::IN;
+        $entry_history->occurred_at = now();
+        return $entry->histories()->save($entry_history);
+    }
+
+    /**
+     * 災害受付 - 退場
+     */
+    public function exit($id)
+    {
+        $entry = DB::transaction(function () use ($id) {
+            $exited_at = now(); // 退場日時
+            // Save Entry
+            $entry = $this->show($id);
+            $entry->exited_at = $exited_at;
+            $entry->save();
+            // Save EntryHistory
+            $entry_history = new EntryHistory();
+            $entry_history->type = EntryHistoryType::EXIT;
+            $entry_history->occurred_at = $exited_at;
+            $entry->histories()->save($entry_history);
+            return $entry;
+        });
+        return $entry;
     }
 }
