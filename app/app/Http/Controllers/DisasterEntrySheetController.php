@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DisasterEntryResource;
 use App\Http\Resources\DisasterEntrySheetResource;
 use App\Services\DisasterEntryService;
 use App\Services\DisasterEntrySheetService;
@@ -32,5 +33,20 @@ class DisasterEntrySheetController extends Controller
             return response()->notfound();
         }
         return new DisasterEntrySheetResource($entry_sheet);
+    }
+
+    /**
+     * 災害 - 受付シート - 受付詳細
+     */
+    public function entry($id)
+    {
+        $entry_sheet = $this->disaster_entry_sheet_service->show($id);
+        if (empty($entry_sheet)) {
+            return response()->notfound();
+        }
+        if (empty($entry_sheet->entry)) {
+            return response()->badrequest(null, 'このシートは受付されていません');
+        }
+        return new DisasterEntryResource($entry_sheet->entry);
     }
 }

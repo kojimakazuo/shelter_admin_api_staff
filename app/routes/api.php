@@ -32,13 +32,13 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('', [DisasterController::class, 'store']);
         Route::put('/{id}', [DisasterController::class, 'update']);
         Route::delete('/{id}', [DisasterController::class, 'destroy']);
-        Route::group(['prefix' => 'entry_sheets'], function ($router) {
-            Route::get('web/{id}', [DisasterEntrySheetController::class, 'web']);
-        });
-        Route::group(['prefix' => 'entry'], function ($router) {
-            Route::post('web', [DisasterEntryController::class, 'web']);
-        });
-    });
+        Route::get('entry_sheets/web/{id}', [DisasterEntrySheetController::class, 'web']);
+        Route::get('entry_sheets/{id}/entry', [DisasterEntrySheetController::class, 'entry']);
+        Route::post('entry/web', [DisasterEntryController::class, 'web']);
+        Route::post('entries/{id}/out', [DisasterEntryController::class, 'out']);
+        Route::post('entries/{id}/in', [DisasterEntryController::class, 'in']);
+        Route::post('entries/{id}/exit', [DisasterEntryController::class, 'exit']);
+});
     Route::group(['prefix' => 'shelters'], function ($router) {
         Route::get('', [ShelterController::class, 'index']);
         Route::get('/{id}', [ShelterController::class, 'show']);
