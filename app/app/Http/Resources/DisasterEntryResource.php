@@ -12,7 +12,7 @@ class DisasterEntryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'disaster_shelter_id' => $this->disaster_shelter_id,
+            'disaster_shelter' => new DisasterShelterResource($this->disasterShelter),
             'entry_sheet_id' => $this->entry_sheet_id,
             'enterd_at' => $this->enterd_at->format('Y-m-d\TH:i:s'),
             'exited_at' => optional($this->exited_at)->format('Y-m-d\TH:i:s'),

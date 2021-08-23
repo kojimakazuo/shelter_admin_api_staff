@@ -22,6 +22,11 @@ class Entry extends Model
         'exited_at' => 'datetime',
     ];
 
+    public function disasterShelter()
+    {
+        return $this->belongsTo(DisasterShelter::class);
+    }
+
     public function entrySheet()
     {
         return $this->belongsTo(EntrySheet::class);
