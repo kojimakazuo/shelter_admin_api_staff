@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DisasterEntrySearchRequest;
 use App\Http\Requests\DisasterEntryWebRequest;
+use App\Http\Resources\DisasterEntryCollection;
 use App\Http\Resources\DisasterEntryResource;
 use App\Services\DisasterEntryService;
 use App\Services\DisasterEntrySheetService;
@@ -20,6 +22,17 @@ class DisasterEntryController extends Controller
         $this->disaster_service = $disaster_service;
         $this->disaster_entry_service = $disaster_entry_service;
         $this->disaster_entry_sheet_service = $disaster_entry_sheet_service;
+    }
+
+    /**
+     * 災害 - 受付一覧
+     */
+    public function index($id, DisasterEntrySearchRequest $request)
+    {
+        $params = $request->formattedQueryParams();
+        return new DisasterEntryCollection([
+            'entries' => $this->disaster_entry_service->find($id, $params['disaster_shelter_id'] ?? NULL, $params['enterd_at_from'] ?? NULL, $params['name_kana'] ?? NULL),
+        ]);
     }
 
     /**
@@ -87,6 +100,6 @@ class DisasterEntryController extends Controller
         if (!empty($entry->exited_at)) {
             return response()->badrequest(null, 'この避難者はすでに退場済です');
         }
-        $this->disaster_entry_service->exit($id);
+        return new DisasterEntryResource($this->disaster_entry_service->exit($id));
     }
 }

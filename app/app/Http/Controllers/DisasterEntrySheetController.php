@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DisasterEntrySheetSearchRequest;
 use App\Http\Resources\DisasterEntryResource;
-use App\Http\Resources\DisasterEntrySheetResource;
+use App\Http\Resources\DisasterEntrySheetCollection;
+use App\Http\Resources\DisasterEntrySheetWebResource;
 use App\Services\DisasterEntryService;
 use App\Services\DisasterEntrySheetService;
 
@@ -20,6 +22,17 @@ class DisasterEntrySheetController extends Controller
     }
 
     /**
+     * 災害 - 受付シート - 一覧
+     */
+    public function index($id, DisasterEntrySheetSearchRequest $request)
+    {
+        $params = $request->formattedQueryParams();
+        return new DisasterEntrySheetCollection([
+            'entry_sheets' => $this->disaster_entry_sheet_service->find($id, $params['entry_sheet_id'] ?? NULL, $params['created_at_from'] ?? NULL, $params['name_kana'] ?? NULL),
+        ]);
+    }
+
+    /**
      * 災害 - 受付シート - WEB詳細
      */
     public function web($id)
@@ -32,7 +45,7 @@ class DisasterEntrySheetController extends Controller
         if (empty($entry_sheet)) {
             return response()->notfound();
         }
-        return new DisasterEntrySheetResource($entry_sheet);
+        return new DisasterEntrySheetWebResource($entry_sheet);
     }
 
     /**

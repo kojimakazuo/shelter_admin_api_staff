@@ -9,6 +9,28 @@ use App\Models\EntrySheetWebCompanion;
 class DisasterEntrySheetService
 {
     /**
+     * 一覧
+     */
+    public function find($disaster_id, $entry_sheet_id, $created_at_from, $name_kana)
+    {
+        $query = EntrySheet::select('*');
+        $query->doesntHave('entry');
+        $query->where('disaster_id', $disaster_id);
+        $query->where('type', EntrySheetType::WEB);
+        if (!empty($entry_sheet_id)) {
+            $query->where('id', $entry_sheet_id);
+        }
+        if (!empty($created_at_from)) {
+            $query->where('created_at', '>=' , $created_at_from);
+        }
+        if (!empty($name_kana)) {
+            $query->where('name_kana', 'like', "$name_kana%");
+        }
+        $query->orderBy('id', 'asc');
+        return $query->paginate(50);
+    }
+
+    /**
      * 詳細
      */
     public function show($id)
