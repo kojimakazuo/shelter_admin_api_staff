@@ -33,10 +33,11 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::put('/{id}', [DisasterController::class, 'update']);
         Route::delete('/{id}', [DisasterController::class, 'destroy']);
         Route::get('/{id}/entry_sheets', [DisasterEntrySheetController::class, 'index']);
-        Route::get('entry_sheets/web/{id}', [DisasterEntrySheetController::class, 'web']);
+        Route::get('entry_sheets/{id}/web', [DisasterEntrySheetController::class, 'web']);
         Route::get('entry_sheets/{id}/entry', [DisasterEntrySheetController::class, 'entry']);
         Route::get('/{id}/entries', [DisasterEntryController::class, 'index']);
         Route::post('entry/web', [DisasterEntryController::class, 'web']);
+        Route::get('entries/{id}', [DisasterEntryController::class, 'show']);
         Route::post('entries/{id}/out', [DisasterEntryController::class, 'out']);
         Route::post('entries/{id}/in', [DisasterEntryController::class, 'in']);
         Route::post('entries/{id}/exit', [DisasterEntryController::class, 'exit']);

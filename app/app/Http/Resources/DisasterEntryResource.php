@@ -18,6 +18,8 @@ class DisasterEntryResource extends JsonResource
             'exited_at' => optional($this->exited_at)->format('Y-m-d\TH:i:s'),
             'site_type' => $this->site_type,
             'entry_sheet' => new DisasterEntrySheetResource($this->entrySheet),
+            'histories' => DisasterEntryHistoryResource::collection($this->histories),
+            'breakdown' => $this->entrySheet->breakdown(),
         ];
     }
 }

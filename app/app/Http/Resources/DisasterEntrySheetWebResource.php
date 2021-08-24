@@ -23,7 +23,11 @@ class DisasterEntrySheetWebResource extends JsonResource
             'address' => $web->address,
             'phone_number' => $web->phone_number,
             'companion' => $web->companion,
+            'stay_in_car' => $web->stay_in_car,
+            'number_of_in_car' => $web->number_of_in_car,
+            'temperature' => $web->temperature,
             'companions' => DisasterEntrySheetWebCompanionResource::collection($web->companions),
+            'enquete' => $web->enquete->data,
         ];
     }
 }

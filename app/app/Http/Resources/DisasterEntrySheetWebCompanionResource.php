@@ -16,6 +16,7 @@ class DisasterEntrySheetWebCompanionResource extends JsonResource
             'name_kana' => $this->name_kana,
             'birthday' => $this->birthday->format('Y-m-d'),
             'gender' => $this->gender,
+            'temperature' => $this->temperature,
         ];
     }
 }

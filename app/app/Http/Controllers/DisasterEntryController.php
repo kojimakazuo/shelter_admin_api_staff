@@ -36,6 +36,18 @@ class DisasterEntryController extends Controller
     }
 
     /**
+     * 災害 - 受付 - 詳細
+     */
+    public function show($id)
+    {
+        $entry = $this->disaster_entry_service->show($id);
+        if (empty($entry)) {
+            return response()->notfound();
+        }
+        return new DisasterEntryResource($entry);
+    }
+
+    /**
      * 災害 - 受付 - WEB受付
      */
     public function web(DisasterEntryWebRequest $request)
