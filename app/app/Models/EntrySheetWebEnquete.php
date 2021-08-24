@@ -16,4 +16,8 @@ class EntrySheetWebEnquete extends Model
     protected $guarded = [
         'id',
     ];
+
+    protected $casts = [
+        'data' => 'json',
+    ];
 }

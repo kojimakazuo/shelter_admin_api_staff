@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DisasterEntrySheetResource extends JsonResource
+class DisasterEntryHistoryResource extends JsonResource
 {
     public static $wrap = null;
 
@@ -12,11 +12,8 @@ class DisasterEntrySheetResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'disaster_id' => $this->disaster_id,
             'type' => $this->type,
-            'name' => $this->name,
-            'name_kana' => $this->name_kana,
-            'web' => new DisasterEntrySheetWebResource($this),
+            'occurred_at' => $this->occurred_at->format('Y-m-d\TH:i:s'),
         ];
     }
 }

@@ -30,4 +30,9 @@ class EntrySheetWeb extends Model
     {
         return $this->hasMany(EntrySheetWebCompanion::class);
     }
+
+    public function enquete()
+    {
+        return $this->hasOne(EntrySheetWebEnquete::class);
+    }
 }
