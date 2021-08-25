@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DisasterEntrySheetSearchRequest;
+use App\Http\Requests\DisasterEntrySheetWebRequest;
 use App\Http\Resources\DisasterEntryResource;
 use App\Http\Resources\DisasterEntrySheetCollection;
 use App\Http\Resources\DisasterEntrySheetWebResource;
@@ -37,14 +38,22 @@ class DisasterEntrySheetController extends Controller
      */
     public function web($id)
     {
-        $entry = $this->disaster_entry_service->findByEntrySheetId($id);
-        if (!empty($entry)) {
-            return response()->badrequest(null, 'このシートはすでに受付済です');
-        }
         $entry_sheet = $this->disaster_entry_sheet_service->web($id);
         if (empty($entry_sheet)) {
             return response()->notfound();
         }
+        return new DisasterEntrySheetWebResource($entry_sheet);
+    }
+
+    /**
+     * 災害 - 受付シート - WEB更新
+     */
+    public function updateWeb($id, DisasterEntrySheetWebRequest $request)
+    {
+        if (empty($this->disaster_entry_sheet_service->web($id))) {
+            return response()->notfound();
+        }
+        $entry_sheet = $this->disaster_entry_sheet_service->updateWeb($id, $request->fillable());
         return new DisasterEntrySheetWebResource($entry_sheet);
     }
 

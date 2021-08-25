@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\EntrySheetType;
 use App\Models\EntrySheet;
 use App\Models\EntrySheetWebCompanion;
+use Illuminate\Support\Facades\DB;
 
 class DisasterEntrySheetService
 {
@@ -49,6 +50,47 @@ class DisasterEntrySheetService
         $query->where('id', $id);
         $query->where('type', EntrySheetType::WEB);
         return $query->first();
+    }
+
+    /**
+     * WEB更新
+     */
+    public function updateWeb($id, $request)
+    {
+        $entry_sheet = DB::transaction(function () use ($id, $request) {
+            // Save EntrySheet
+            $entry_sheet = EntrySheet::find($id);
+            $entry_sheet->fill($request)->save();
+            // Save EntrySheetWeb
+            $entry_sheet->web->fill($request)->save();
+            // Save EntrySheetWebCompanions
+            $new_entry_sheet_web_companions = $request['companions'];
+            foreach ($entry_sheet->web->companions as &$companion) {
+                $index = array_search($companion->id, array_column($new_entry_sheet_web_companions, 'id'));
+                if ($index !== FALSE) {
+                    // 指定されたidが存在する場合は更新
+                    $companion->fill($new_entry_sheet_web_companions[$index])->save();
+                    continue;
+                } else {
+                    // 削除
+                    $companion->delete();
+                }
+            }
+            unset($companion);
+            $add_entry_sheet_web_companions = array_map(function($e) use ($entry_sheet) {
+                $companion = new EntrySheetWebCompanion();
+                $companion->fill($e);
+                $companion->entry_sheet_web_id = $entry_sheet->web->id;
+                return $companion;
+            }, array_filter($new_entry_sheet_web_companions, function($e) {
+                return !array_key_exists('id', $e);
+            }));
+            $entry_sheet->web->companions()->saveMany($add_entry_sheet_web_companions);
+            // Save EntrySheetWebEnquete
+            $entry_sheet->web->enquete->update(['data' => $request['enquetes']]);
+            return $entry_sheet;
+        });
+        return $this->show($entry_sheet->id);
     }
 
     /**

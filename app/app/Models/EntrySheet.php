@@ -19,6 +19,13 @@ class EntrySheet extends Model
         'id',
     ];
 
+    protected $fillable = [
+        'disaster_id',
+        'type',
+        'name',
+        'name_kana',
+    ];
+
     public function entry()
     {
         return $this->hasOne(Entry::class);
