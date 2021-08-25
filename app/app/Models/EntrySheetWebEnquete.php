@@ -17,6 +17,11 @@ class EntrySheetWebEnquete extends Model
         'id',
     ];
 
+    protected $fillable = [
+        'entry_sheet_web_id',
+        'data',
+    ];
+
     protected $casts = [
         'data' => 'json',
     ];

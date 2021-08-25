@@ -17,6 +17,15 @@ class EntrySheetWebCompanion extends Model
         'id',
     ];
 
+    protected $fillable = [
+        'entry_sheet_web_id',
+        'name',
+        'name_kana',
+        'birthday',
+        'gender',
+        'temperature',
+    ];
+
     protected $casts = [
         'birthday'  => 'date',
     ];

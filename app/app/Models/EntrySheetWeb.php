@@ -17,8 +17,22 @@ class EntrySheetWeb extends Model
         'id',
     ];
 
+    protected $fillable = [
+        'entry_sheet_id',
+        'birthday',
+        'gender',
+        'temperature',
+        'postal_code',
+        'address',
+        'phone_number',
+        'companion',
+        'stay_in_car',
+        'number_of_in_car',
+    ];
+
     protected $casts = [
         'birthday'  => 'date',
+        'stay_in_car' => 'boolean',
     ];
 
     public function entrySheet()
