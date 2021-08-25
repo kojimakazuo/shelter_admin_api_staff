@@ -11,7 +11,7 @@ class DisasterEntrySearchRequest extends FormRequest
     {
         return [
             'disaster_shelter_id' => 'integer',
-            'enterd_at_from' => 'date_format:Y-m-d\TH:i:s',
+            'entered_at_from' => 'date_format:Y-m-d\TH:i:s',
             'name_kana'  => 'hiragana',
         ];
     }

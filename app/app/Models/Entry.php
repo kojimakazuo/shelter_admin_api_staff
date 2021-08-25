@@ -18,7 +18,7 @@ class Entry extends Model
     ];
 
     protected $casts = [
-        'enterd_at'  => 'datetime',
+        'entered_at'  => 'datetime',
         'exited_at' => 'datetime',
     ];
 

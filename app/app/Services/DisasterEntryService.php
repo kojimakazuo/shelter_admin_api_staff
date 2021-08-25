@@ -19,7 +19,7 @@ class DisasterEntryService
     /**
      * 災害受付一覧
      */
-    public function find($disaster_id, $disaster_shelter_id, $enterd_at_from, $name_kana)
+    public function find($disaster_id, $disaster_shelter_id, $entered_at_from, $name_kana)
     {
         $query = Entry::select('entries.*');
         $query->join('entry_sheets','entry_sheets.id','=','entries.entry_sheet_id');
@@ -27,8 +27,8 @@ class DisasterEntryService
         if (!empty($disaster_shelter_id)) {
             $query->where('disaster_shelter_id', $disaster_shelter_id);
         }
-        if (!empty($enterd_at_from)) {
-            $query->where('enterd_at', '>=' , $enterd_at_from);
+        if (!empty($entered_at_from)) {
+            $query->where('entered_at', '>=' , $entered_at_from);
         }
         if (!empty($name_kana)) {
             $query->where('name_kana', 'like', "$name_kana%");
@@ -43,15 +43,15 @@ class DisasterEntryService
     public function entry($request)
     {
         $entry = DB::transaction(function () use ($request) {
-            $enterd_at = now(); // 入場日時
+            $entered_at = now(); // 入場日時
             // Save Entry
             $entry = new Entry($request);
-            $entry->enterd_at = $enterd_at;
+            $entry->entered_at = $entered_at;
             $entry->save();
             // Save EntryHistory
             $entry_history = new EntryHistory($request);
             $entry_history->type = EntryHistoryType::ENTRY;
-            $entry_history->occurred_at = $enterd_at;
+            $entry_history->occurred_at = $entered_at;
             $entry->histories()->save($entry_history);
             $this->disaster_entry_sheet_service->updateTemperatures($request['entry_sheet_id'], $request['temperature'], $request['companions']);
             return $entry;
