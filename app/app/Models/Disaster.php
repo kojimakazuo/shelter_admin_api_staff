@@ -31,4 +31,9 @@ class Disaster extends Model
     {
         return $this->belongsToMany(Shelter::class, 'disaster_shelters', 'disaster_id', 'shelter_id')->whereNull('disaster_shelters.deleted_at');
     }
+
+    public function entries()
+    {
+        return $this->hasManyThrough(Entry::class, DisasterShelter::class);
+    }
 }

@@ -14,7 +14,7 @@ class DisasterEntryResource extends JsonResource
             'id' => $this->id,
             'disaster_shelter' => new DisasterShelterResource($this->disasterShelter),
             'entry_sheet_id' => $this->entry_sheet_id,
-            'enterd_at' => $this->enterd_at->format('Y-m-d\TH:i:s'),
+            'entered_at' => $this->entered_at->format('Y-m-d\TH:i:s'),
             'exited_at' => optional($this->exited_at)->format('Y-m-d\TH:i:s'),
             'site_type' => $this->site_type,
             'entry_sheet' => new DisasterEntrySheetResource($this->entrySheet),

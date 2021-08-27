@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\HomeCollection;
+use App\Http\Resources\HomeResource;
 use App\Services\HomeService;
 
 class HomeController extends Controller
@@ -20,6 +21,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return new HomeCollection($this->home_service->find());
+        return new HomeResource($this->home_service->find());
     }
 }

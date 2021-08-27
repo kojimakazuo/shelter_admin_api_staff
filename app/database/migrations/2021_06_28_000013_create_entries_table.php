@@ -19,7 +19,7 @@ class CreateEntriesTable extends Migration
             $table->foreign('disaster_shelter_id')->references('id')->on('disaster_shelters');
             $table->bigInteger('entry_sheet_id')->unsigned()->comment('受付シートID');
             $table->foreign('entry_sheet_id')->references('id')->on('entry_sheets');
-            $table->datetime('enterd_at')->comment('入場日時');
+            $table->datetime('entered_at')->comment('入場日時');
             $table->datetime('exited_at')->nullable()->comment('退場日時');
             $table->enum('site_type', ['General', 'BadCondition', 'Car'])->comment('避難場所タイプ(一般, 体調不良者向け, 車中泊)');
             $table->timestamp('created_at')->useCurrent()->nullable();
