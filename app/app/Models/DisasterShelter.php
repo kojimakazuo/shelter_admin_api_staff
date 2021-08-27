@@ -33,4 +33,9 @@ class DisasterShelter extends Model
     {
         return $this->belongsTo(StaffUser::class);
     }
+
+    public function entries()
+    {
+        return $this->hasMany(Entry::class);
+    }
 }
