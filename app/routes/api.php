@@ -38,6 +38,7 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::get('entry_sheets/{id}/entry', [DisasterEntrySheetController::class, 'entry']);
         Route::get('/{id}/entries', [DisasterEntryController::class, 'index']);
         Route::post('entry/web', [DisasterEntryController::class, 'web']);
+        Route::post('entry/paper', [DisasterEntryController::class, 'paper']);
         Route::get('entries/{id}', [DisasterEntryController::class, 'show']);
         Route::post('entries/{id}/out', [DisasterEntryController::class, 'out']);
         Route::post('entries/{id}/in', [DisasterEntryController::class, 'in']);

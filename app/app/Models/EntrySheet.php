@@ -36,6 +36,11 @@ class EntrySheet extends Model
         return $this->hasOne(EntrySheetWeb::class);
     }
 
+    public function paper()
+    {
+        return $this->hasOne(EntrySheetPaper::class);
+    }
+
     public function breakdown()
     {
         $breakdown = [
