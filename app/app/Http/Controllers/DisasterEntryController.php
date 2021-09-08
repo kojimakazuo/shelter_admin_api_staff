@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DisasterEntryPaperRequest;
 use App\Http\Requests\DisasterEntrySearchRequest;
 use App\Http\Requests\DisasterEntryWebRequest;
 use App\Http\Resources\DisasterEntryCollection;
@@ -66,7 +67,25 @@ class DisasterEntryController extends Controller
         if (!$this->disaster_service->isOccurring($entry_sheet->disaster_id)) {
             return response()->badrequest(null, 'この受付シートは現在発生中の災害で作成されたものではないため無効です');
         }
-        $entry = $this->disaster_entry_service->entry($request->fillable());
+        $entry = $this->disaster_entry_service->entryForWeb($request->fillable());
+        return new DisasterEntryResource($entry);
+    }
+
+    /**
+     * 災害 - 受付 - 紙受付
+     */
+    public function paper(DisasterEntryPaperRequest $request)
+    {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            return response()->badrequest(null, '現在発生中の災害はありません');
+        }
+        // 管理番号使用済みチェック
+        $sheet_number = $request->fillable()['sheet_number'];
+        if (!empty($this->disaster_entry_service->findBySheetNumber($disaster->id, $sheet_number))) {
+            return response()->badrequest(null, 'この管理番号はすでに使用されています');
+        }
+        $entry = $this->disaster_entry_service->entryForPaper($disaster->id, $request->fillable());
         return new DisasterEntryResource($entry);
     }
 

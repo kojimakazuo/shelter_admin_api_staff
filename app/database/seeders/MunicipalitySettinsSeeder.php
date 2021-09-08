@@ -16,9 +16,9 @@ class MunicipalitySettinsSeeder extends Seeder
     {
         DB::table('municipality_settings')->insert([
             [
-                'name' => 'XX市',
-                'latitude' => 35.70162181894888,
-                'longitude' => 139.76676995550267,
+                'name' => 'シェアクレスト',
+                'latitude' => 35.70159568124503,
+                'longitude' => 139.76673776968042,
                 'created_by' => 1,
                 'updated_by' => 1,
             ],

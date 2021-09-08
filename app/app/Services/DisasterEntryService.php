@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\EntryHistoryType;
+use App\Enums\EntrySheetType;
 use App\Models\Entry;
 use App\Models\EntryHistory;
 use Illuminate\Support\Facades\DB;
@@ -38,9 +39,9 @@ class DisasterEntryService
     }
 
     /**
-     * 災害受付
+     * 災害受付(WEB)
      */
-    public function entry($request)
+    public function entryForWeb($request)
     {
         $entry = DB::transaction(function () use ($request) {
             $entered_at = now(); // 入場日時
@@ -54,6 +55,30 @@ class DisasterEntryService
             $entry_history->occurred_at = $entered_at;
             $entry->histories()->save($entry_history);
             $this->disaster_entry_sheet_service->updateTemperatures($request['entry_sheet_id'], $request['temperature'], $request['companions']);
+            return $entry;
+        });
+        return $entry;
+    }
+
+    /**
+     * 災害受付(紙)
+     */
+    public function entryForPaper($disaster_id, $request)
+    {
+        $entry = DB::transaction(function () use ($disaster_id, $request) {
+            $entered_at = now(); // 入場日時
+            // Save EntrySheet
+            $entry_sheet = $this->disaster_entry_sheet_service->addPaper($disaster_id, $request);
+            // Save Entry
+            $entry = new Entry($request);
+            $entry->entry_sheet_id = $entry_sheet->id;
+            $entry->entered_at = $entered_at;
+            $entry->save();
+            // Save EntryHistory
+            $entry_history = new EntryHistory($request);
+            $entry_history->type = EntryHistoryType::ENTRY;
+            $entry_history->occurred_at = $entered_at;
+            $entry->histories()->save($entry_history);
             return $entry;
         });
         return $entry;
@@ -76,6 +101,20 @@ class DisasterEntryService
     {
         $query = Entry::select('*');
         $query->where('entry_sheet_id', $id);
+        return $query->first();
+    }
+
+    /**
+     * 災害受付詳細(By SheetNumber)
+     */
+    public function findBySheetNumber($disaster_id, $sheet_number)
+    {
+        $query = Entry::select('entries.*');
+        $query->join('entry_sheets','entry_sheets.id','=','entries.entry_sheet_id');
+        $query->join('entry_sheet_papers','entry_sheet_papers.entry_sheet_id','=','entry_sheets.id');
+        $query->where('type', EntrySheetType::PAPER);
+        $query->where('disaster_id', $disaster_id);
+        $query->where('sheet_number', $sheet_number);
         return $query->first();
     }
 

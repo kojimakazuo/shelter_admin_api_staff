@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Enums\EntrySheetType;
 use App\Models\EntrySheet;
+use App\Models\EntrySheetPaper;
+use App\Models\EntrySheetPaperCompanion;
 use App\Models\EntrySheetWebCompanion;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DisasterEntrySheetService
 {
@@ -53,6 +56,17 @@ class DisasterEntrySheetService
     }
 
     /**
+     * PAPER詳細
+     */
+    public function paper($id)
+    {
+        $query = EntrySheet::select('*');
+        $query->where('id', $id);
+        $query->where('type', EntrySheetType::PAPER);
+        return $query->first();
+    }
+
+    /**
      * WEB更新
      */
     public function updateWeb($id, $request)
@@ -94,6 +108,32 @@ class DisasterEntrySheetService
     }
 
     /**
+     * 紙登録
+     */
+    public function addPaper($disaster_id, $request)
+    {
+        $request['disaster_id'] = $disaster_id;
+        $request['type'] = EntrySheetType::PAPER;
+        $entry_sheet = DB::transaction(function () use ($request) {
+            // Save EntrySheet
+            $entry_sheet = new EntrySheet($request);
+            $entry_sheet->save();
+            // // Save EntrySheetPaper
+            $entry_sheet_paper = new EntrySheetPaper($request);
+            $entry_sheet->paper()->save($entry_sheet_paper);
+            // Save EntrySheetPaperCompanions
+            $entry_sheet_paper_companions = array_map(function($companion) {
+                return new EntrySheetPaperCompanion($companion);
+            }, $request['companions']);
+            $entry_sheet_paper->companions()->saveMany($entry_sheet_paper_companions);
+            $this->updatePaperFrontImage($entry_sheet->id, $request['front_image']);
+            $this->updatePaperBackImage($entry_sheet->id, $request['back_image']);
+            return $entry_sheet;
+        });
+        return $entry_sheet;
+    }
+
+    /**
      * 体温更新
      */
     public function updateTemperatures($id, $temperature, $companions)
@@ -119,5 +159,41 @@ class DisasterEntrySheetService
                 // TODO: 未実装
                 return $entry_sheet;
         }
+    }
+
+    public function updatePaperFrontImage($id, $base64_image)
+    {
+        $entry_sheet = $this->show($id);
+        $paper_id = $entry_sheet->paper->id;
+
+        preg_match('/data:image\/(\w+);base64,(.*)/u', $base64_image, $matches);
+        $ext = $matches[1];
+        $data = $matches[2];
+
+        // AWS S3に格納
+        $path = "entry_sheet_papers/$paper_id/front.$ext";
+        Storage::disk('s3')->put($path, base64_decode($data), 'private');
+        $s3_url = Storage::disk('s3')->url($path);
+        $paper = $entry_sheet->paper;
+        $paper->front_sheet_image_url = $s3_url;
+        $paper->save();
+    }
+
+    public function updatePaperBackImage($id, $base64_image)
+    {
+        $entry_sheet = $this->show($id);
+        $paper_id = $entry_sheet->paper->id;
+
+        preg_match('/data:image\/(\w+);base64,(.*)/u', $base64_image, $matches);
+        $ext = $matches[1];
+        $data = $matches[2];
+
+        // AWS S3に格納
+        $path = "entry_sheet_papers/$paper_id/back.$ext";
+        Storage::disk('s3')->put($path, base64_decode($data), 'private');
+        $s3_url = Storage::disk('s3')->url($path);
+        $paper = $entry_sheet->paper;
+        $paper->back_sheet_image_url = $s3_url;
+        $paper->save();
     }
 }

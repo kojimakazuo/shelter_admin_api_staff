@@ -16,4 +16,9 @@ class EntrySheetPaper extends Model
     protected $guarded = [
         'id',
     ];
+
+    public function companions()
+    {
+        return $this->hasMany(EntrySheetPaperCompanion::class);
+    }
 }
