@@ -20,8 +20,8 @@ class CreateEntrySheetPapersTable extends Migration
             $table->string('sheet_number')->comment('シート番号');
             $table->enum('gender', ['Male', 'Female'])->comment('代表者性別');
             $table->float('temperature')->comment('代表者体温');
-            $table->string('front_sheet_image_url')->comment('表チェックシートURL');
-            $table->string('back_sheet_image_url')->comment('裏チェックシートURL');
+            $table->string('front_sheet_image_url')->nullable()->comment('表チェックシートURL');
+            $table->string('back_sheet_image_url')->nullable()->comment('裏チェックシートURL');
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
