@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DisasterEntrySheetPaperRequest;
 use App\Http\Requests\DisasterEntrySheetSearchRequest;
 use App\Http\Requests\DisasterEntrySheetWebRequest;
 use App\Http\Resources\DisasterEntryResource;
 use App\Http\Resources\DisasterEntrySheetCollection;
+use App\Http\Resources\DisasterEntrySheetPaperResource;
 use App\Http\Resources\DisasterEntrySheetWebResource;
 use App\Services\DisasterEntryService;
 use App\Services\DisasterEntrySheetService;
@@ -55,6 +57,33 @@ class DisasterEntrySheetController extends Controller
         }
         $entry_sheet = $this->disaster_entry_sheet_service->updateWeb($id, $request->fillable());
         return new DisasterEntrySheetWebResource($entry_sheet);
+    }
+
+    /**
+     * 災害 - 受付シート - 紙詳細
+     */
+    public function paper($id)
+    {
+        $entry_sheet = $this->disaster_entry_sheet_service->paper($id);
+        if (empty($entry_sheet)) {
+            return response()->notfound();
+        }
+        return new DisasterEntrySheetPaperResource($entry_sheet);
+    }
+
+    /**
+     * 災害 - 受付シート - 紙更新
+     */
+    public function updatePaper($id, DisasterEntrySheetPaperRequest $request)
+    {
+        // 管理番号使用済みチェック
+        $entry_sheet = $this->paper($id);
+        $sheet_number = $request->fillable()['sheet_number'];
+        if (!empty($this->disaster_entry_service->findBySheetNumber($entry_sheet->disaster_id, $sheet_number, $entry_sheet->id))) {
+            return response()->badrequest(null, 'この管理番号はすでに使用されています');
+        }
+        $entry_sheet = $this->disaster_entry_sheet_service->updatePaper($id, $request->fillable());
+        return new DisasterEntrySheetPaperResource($entry_sheet);
     }
 
     /**

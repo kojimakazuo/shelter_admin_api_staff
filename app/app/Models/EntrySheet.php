@@ -63,6 +63,18 @@ class EntrySheet extends Model
                 }
                 return $breakdown;
             case EntrySheetType::PAPER:
+                if ($this->paper->gender == Gender::MALE) {
+                    $breakdown['numberOfMale']++;
+                } else {
+                    $breakdown['numberOfFemale']++;
+                }
+                foreach($this->paper->companions as $companion) {
+                    if ($companion->gender == Gender::MALE) {
+                        $breakdown['numberOfMale']++;
+                    } else {
+                        $breakdown['numberOfFemale']++;
+                    }
+                }
                 return $breakdown;
         }
     }

@@ -134,6 +134,45 @@ class DisasterEntrySheetService
     }
 
     /**
+     * 紙更新
+     */
+    public function updatePaper($id, $request)
+    {
+        $entry_sheet = DB::transaction(function () use ($id, $request) {
+            // Save EntrySheet
+            $entry_sheet = EntrySheet::find($id);
+            $entry_sheet->fill($request)->save();
+            // Save EntrySheetPaper
+            $entry_sheet->paper->fill($request)->save();
+            // Save EntrySheetPaperCompanions
+            $new_entry_sheet_paper_companions = $request['companions'];
+            foreach ($entry_sheet->paper->companions as &$companion) {
+                $index = array_search($companion->id, array_column($new_entry_sheet_paper_companions, 'id'));
+                if ($index !== FALSE) {
+                    // 指定されたidが存在する場合は更新
+                    $companion->fill($new_entry_sheet_paper_companions[$index])->save();
+                    continue;
+                } else {
+                    // 削除
+                    $companion->delete();
+                }
+            }
+            unset($companion);
+            $add_entry_sheet_paper_companions = array_map(function($e) use ($entry_sheet) {
+                $companion = new EntrySheetPaperCompanion();
+                $companion->fill($e);
+                $companion->entry_sheet_paper_id = $entry_sheet->paper->id;
+                return $companion;
+            }, array_filter($new_entry_sheet_paper_companions, function($e) {
+                return !array_key_exists('id', $e);
+            }));
+            $entry_sheet->paper->companions()->saveMany($add_entry_sheet_paper_companions);
+            return $entry_sheet;
+        });
+        return $this->show($entry_sheet->id);
+    }
+
+    /**
      * 体温更新
      */
     public function updateTemperatures($id, $temperature, $companions)
