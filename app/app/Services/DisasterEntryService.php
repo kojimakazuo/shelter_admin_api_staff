@@ -107,14 +107,17 @@ class DisasterEntryService
     /**
      * 災害受付詳細(By SheetNumber)
      */
-    public function findBySheetNumber($disaster_id, $sheet_number)
+    public function findBySheetNumber($disaster_id, $sheet_number, $exclude_entry_sheet_id = null)
     {
         $query = Entry::select('entries.*');
-        $query->join('entry_sheets','entry_sheets.id','=','entries.entry_sheet_id');
-        $query->join('entry_sheet_papers','entry_sheet_papers.entry_sheet_id','=','entry_sheets.id');
+        $query->join('entry_sheets', 'entry_sheets.id', '=', 'entries.entry_sheet_id');
+        $query->join('entry_sheet_papers', 'entry_sheet_papers.entry_sheet_id', '=', 'entry_sheets.id');
         $query->where('type', EntrySheetType::PAPER);
         $query->where('disaster_id', $disaster_id);
         $query->where('sheet_number', $sheet_number);
+        if ($exclude_entry_sheet_id != null) {
+            $query->where('entry_sheets.id', '<>', $exclude_entry_sheet_id);
+        }
         return $query->first();
     }
 
