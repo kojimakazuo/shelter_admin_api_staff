@@ -36,6 +36,23 @@ class DisasterEntrySheetController extends Controller
     }
 
     /**
+     * 災害 - 受付シート - WEB詳細(QRコードデータ(W00形式))
+     */
+    public function qrcode($qrcode_data)
+    {
+        preg_match('/^W([0-9]+$)/u', $qrcode_data, $matches);
+        if (count($matches) < 2) {
+            // 形式エラー
+            return response()->notfound();
+        }
+        $entry_sheet = $this->disaster_entry_sheet_service->web($matches[1]);
+        if (empty($entry_sheet)) {
+            return response()->notfound();
+        }
+        return new DisasterEntrySheetWebResource($entry_sheet);
+    }
+
+    /**
      * 災害 - 受付シート - WEB詳細
      */
     public function web($id)
@@ -84,20 +101,5 @@ class DisasterEntrySheetController extends Controller
         }
         $entry_sheet = $this->disaster_entry_sheet_service->updatePaper($id, $request->fillable());
         return new DisasterEntrySheetPaperResource($entry_sheet);
-    }
-
-    /**
-     * 災害 - 受付シート - 受付詳細
-     */
-    public function entry($id)
-    {
-        $entry_sheet = $this->disaster_entry_sheet_service->show($id);
-        if (empty($entry_sheet)) {
-            return response()->notfound();
-        }
-        if (empty($entry_sheet->entry)) {
-            return response()->badrequest(null, 'このシートは受付されていません');
-        }
-        return new DisasterEntryResource($entry_sheet->entry);
     }
 }
