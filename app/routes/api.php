@@ -33,7 +33,7 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::put('/{id}', [DisasterController::class, 'update']);
         Route::delete('/{id}', [DisasterController::class, 'destroy']);
         Route::get('/{id}/entry_sheets', [DisasterEntrySheetController::class, 'index']);
-        Route::get('entry_sheets/{qrcode_data}/qrcode', [DisasterEntrySheetController::class, 'qrcode']);
+        Route::get('entry_sheets/qrcode/{value}', [DisasterEntrySheetController::class, 'qrcode']);
         Route::get('entry_sheets/{id}/web', [DisasterEntrySheetController::class, 'web']);
         Route::put('entry_sheets/{id}/web', [DisasterEntrySheetController::class, 'updateWeb']);
         Route::get('entry_sheets/{id}/paper', [DisasterEntrySheetController::class, 'paper']);
@@ -42,6 +42,7 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('entry/web', [DisasterEntryController::class, 'web']);
         Route::post('entry/paper', [DisasterEntryController::class, 'paper']);
         Route::get('entries/{id}', [DisasterEntryController::class, 'show']);
+        Route::get('entries/qrcode/{value}', [DisasterEntryController::class, 'qrcode']);
         Route::post('entries/{id}/out', [DisasterEntryController::class, 'out']);
         Route::post('entries/{id}/in', [DisasterEntryController::class, 'in']);
         Route::post('entries/{id}/exit', [DisasterEntryController::class, 'exit']);

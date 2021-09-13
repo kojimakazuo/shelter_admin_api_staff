@@ -10,24 +10,20 @@ class DisasterEntrySheetWebResource extends JsonResource
 
     public function toArray($request)
     {
-        $web = $this->web;
         return [
             'id' => $this->id,
-            'disaster_id' => $this->disaster_id,
-            'type' => $this->type,
-            'name' => $this->name,
-            'name_kana' => $this->name_kana,
-            'birthday' => $web->birthday->format('Y-m-d'),
-            'gender' => $web->gender,
-            'postal_code' => $web->postal_code,
-            'address' => $web->address,
-            'phone_number' => $web->phone_number,
-            'companion' => $web->companion,
-            'stay_in_car' => $web->stay_in_car,
-            'number_of_in_car' => $web->number_of_in_car,
-            'temperature' => $web->temperature,
-            'companions' => DisasterEntrySheetWebCompanionResource::collection($web->companions),
-            'enquetes' => $web->enquete->data,
+            'entry_sheet_id' => $this->entry_sheet_id,
+            'birthday' => $this->birthday->format('Y-m-d'),
+            'gender' => $this->gender,
+            'postal_code' => $this->postal_code,
+            'address' => $this->address,
+            'phone_number' => $this->phone_number,
+            'companion' => $this->companion,
+            'stay_in_car' => $this->stay_in_car,
+            'number_of_in_car' => $this->number_of_in_car,
+            'temperature' => $this->temperature,
+            'companions' => DisasterEntrySheetWebCompanionResource::collection($this->companions),
+            'enquetes' => $this->enquete->data,
         ];
     }
 }

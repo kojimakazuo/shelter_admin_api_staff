@@ -10,6 +10,7 @@ use App\Http\Resources\DisasterEntryResource;
 use App\Services\DisasterEntryService;
 use App\Services\DisasterEntrySheetService;
 use App\Services\DisasterService;
+use Illuminate\Support\Facades\DB;
 
 class DisasterEntryController extends Controller
 {
@@ -46,6 +47,53 @@ class DisasterEntryController extends Controller
             return response()->notfound();
         }
         return new DisasterEntryResource($entry);
+    }
+
+    /**
+     * 災害 - 受付 - 詳細(QRコードデータ(W00/P00形式))
+     */
+    public function qrcode($value)
+    {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            return response()->notfound();
+        }
+        preg_match('/^([WP])([0-9]+$)/u', $value, $matches);
+        if (count($matches) < 3) {
+            // 形式エラー
+            return response()->notfound();
+        }
+        $entry_type = $matches[1];
+        switch($entry_type) {
+            case 'W':
+                $entry_sheet_id = $matches[2];
+                $entry_sheet = $this->disaster_entry_sheet_service->show($entry_sheet_id);
+                if (empty($entry_sheet)) {
+                    return response()->notfound();
+                }
+                if (empty($entry_sheet->entry)) {
+                    return response()->badrequest(null, 'このシートは受付されていません');
+                }
+                if (!empty($entry_sheet->entry->exited_at)) {
+                    return response()->badrequest(null, 'このシートはすでに退場処理がされています');
+                }
+                return new DisasterEntryResource($entry_sheet->entry);
+            case 'P':
+                $sheet_number = $matches[2];
+                // DB::enableQueryLog();
+                $entry_sheet = $this->disaster_entry_sheet_service->paperFromSheetNumber($disaster->id, $sheet_number);
+                // dd(DB::getQueryLog());
+                if (empty($entry_sheet)) {
+                    return response()->notfound();
+                }
+                if (empty($entry_sheet->entry)) {
+                    return response()->badrequest(null, 'このシートは受付されていません');
+                }
+                if (!empty($entry_sheet->entry->exited_at)) {
+                    return response()->badrequest(null, 'このシートはすでに退場処理がされています');
+                }
+                return new DisasterEntryResource($entry_sheet->entry);
+        }
     }
 
     /**

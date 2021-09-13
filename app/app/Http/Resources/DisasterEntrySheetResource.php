@@ -17,8 +17,9 @@ class DisasterEntrySheetResource extends JsonResource
             'type' => $this->type,
             'name' => $this->name,
             'name_kana' => $this->name_kana,
-            'web' => $this->type == EntrySheetType::WEB ? new DisasterEntrySheetWebResource($this) : null,
-            'paper' => $this->type == EntrySheetType::PAPER ? new DisasterEntrySheetPaperResource($this) : null,
+            'web' => $this->type == EntrySheetType::WEB ? new DisasterEntrySheetWebResource($this->web) : null,
+            'paper' => $this->type == EntrySheetType::PAPER ? new DisasterEntrySheetPaperResource($this->paper) : null,
+            'is_entered' => $this->entry != null,
         ];
     }
 }
