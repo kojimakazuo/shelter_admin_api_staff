@@ -67,6 +67,18 @@ class DisasterEntrySheetService
     }
 
     /**
+     * PAPER詳細(管理番号から)
+     */
+    public function paperFromSheetNumber($disaster_id, $sheet_number)
+    {
+        $query = EntrySheet::select('entry_sheets.*');
+        $query->join('entry_sheet_papers', 'entry_sheet_papers.entry_sheet_id', '=', 'entry_sheets.id');
+        $query->where('disaster_id', $disaster_id);
+        $query->where('sheet_number', $sheet_number);
+        return $query->first();
+    }
+
+    /**
      * WEB更新
      */
     public function updateWeb($id, $request)
