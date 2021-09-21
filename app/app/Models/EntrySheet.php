@@ -44,35 +44,35 @@ class EntrySheet extends Model
     public function breakdown()
     {
         $breakdown = [
-            'numberOfMale' => 0,
-            'numberOfFemale' => 0,
+            'number_of_male' => 0,
+            'number_of_female' => 0,
         ];
         switch ($this->type) {
             case EntrySheetType::WEB:
                 if ($this->web->gender == Gender::MALE) {
-                    $breakdown['numberOfMale']++;
+                    $breakdown['number_of_male']++;
                 } else {
-                    $breakdown['numberOfFemale']++;
+                    $breakdown['number_of_female']++;
                 }
                 foreach($this->web->companions as $companion) {
                     if ($companion->gender == Gender::MALE) {
-                        $breakdown['numberOfMale']++;
+                        $breakdown['number_of_male']++;
                     } else {
-                        $breakdown['numberOfFemale']++;
+                        $breakdown['number_of_female']++;
                     }
                 }
                 return $breakdown;
             case EntrySheetType::PAPER:
                 if ($this->paper->gender == Gender::MALE) {
-                    $breakdown['numberOfMale']++;
+                    $breakdown['number_of_male']++;
                 } else {
-                    $breakdown['numberOfFemale']++;
+                    $breakdown['number_of_female']++;
                 }
                 foreach($this->paper->companions as $companion) {
                     if ($companion->gender == Gender::MALE) {
-                        $breakdown['numberOfMale']++;
+                        $breakdown['number_of_male']++;
                     } else {
-                        $breakdown['numberOfFemale']++;
+                        $breakdown['number_of_female']++;
                     }
                 }
                 return $breakdown;
