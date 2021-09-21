@@ -22,6 +22,7 @@ class DisasterEntrySheetWebResource extends JsonResource
             'stay_in_car' => $this->stay_in_car,
             'number_of_in_car' => $this->number_of_in_car,
             'temperature' => $this->temperature,
+            'has_companion' => count($this->companions) > 0,
             'companions' => DisasterEntrySheetWebCompanionResource::collection($this->companions),
             'enquetes' => $this->enquete->data,
         ];

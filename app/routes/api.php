@@ -23,7 +23,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::group(['prefix' => 'auth'], function ($router) {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('refresh', [AuthController::class, 'refresh']);
+        Route::post('refresh', [AuthController::class, 'refresh']);
     });
     Route::group(['prefix' => 'disasters'], function ($router) {
         Route::get('', [DisasterController::class, 'index']);

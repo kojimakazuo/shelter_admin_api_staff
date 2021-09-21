@@ -47,7 +47,9 @@ class StaffUserService
             return;
         }
         $staffUser->fill($request);
-        $staffUser->password = Hash::make($request['password']);
+        if (array_key_exists('password', $request) && $request['password'] != null) {
+            $staffUser->password = Hash::make($request['password']);
+        }
         $staffUser->save();
         return $staffUser;
     }

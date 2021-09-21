@@ -6,7 +6,6 @@ use App\Http\Requests\DisasterEntrySheetPaperRequest;
 use App\Http\Requests\DisasterEntrySheetSearchRequest;
 use App\Http\Requests\DisasterEntrySheetWebRequest;
 use App\Http\Resources\DisasterEntrySheetCollection;
-use App\Http\Resources\DisasterEntrySheetPaperResource;
 use App\Http\Resources\DisasterEntrySheetResource;
 use App\Services\DisasterEntryService;
 use App\Services\DisasterEntrySheetService;
@@ -103,7 +102,7 @@ class DisasterEntrySheetController extends Controller
         if (empty($entry_sheet)) {
             return response()->notfound();
         }
-        return new DisasterEntrySheetPaperResource($entry_sheet);
+        return new DisasterEntrySheetResource($entry_sheet);
     }
 
     /**
@@ -118,6 +117,6 @@ class DisasterEntrySheetController extends Controller
             return response()->badrequest(null, 'この管理番号はすでに使用されています');
         }
         $entry_sheet = $this->disaster_entry_sheet_service->updatePaper($id, $request->fillable());
-        return new DisasterEntrySheetPaperResource($entry_sheet);
+        return new DisasterEntrySheetResource($entry_sheet);
     }
 }
