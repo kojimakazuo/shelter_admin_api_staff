@@ -61,7 +61,7 @@ class AuthController extends Controller
 
     protected function respondWithCookie(Request $request, CookieJar $cookie, $token)
     {
-        return response()->json([], 200)->withCookie($cookie->make(
+        return response()->json($this->respondWithToken($token), 200)->withCookie($cookie->make(
             config('cookie.token.key'),
             $token,
             config('cookie.token.expire'),
