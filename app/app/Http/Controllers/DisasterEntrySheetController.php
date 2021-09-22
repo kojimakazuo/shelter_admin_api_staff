@@ -32,7 +32,7 @@ class DisasterEntrySheetController extends Controller
     {
         $params = $request->formattedQueryParams();
         return new DisasterEntrySheetCollection([
-            'entry_sheets' => $this->disaster_entry_sheet_service->find($id, $params['entry_sheet_id'] ?? NULL, $params['created_at_from'] ?? NULL, $params['name_kana'] ?? NULL),
+            'entry_sheets' => $this->disaster_entry_sheet_service->find($id, $params['entry_sheet_id'] ?? NULL, $params['created_at_from'] ?? NULL, $params['name_kana'] ?? NULL, $params['per_page'] ?? 10),
         ]);
     }
 

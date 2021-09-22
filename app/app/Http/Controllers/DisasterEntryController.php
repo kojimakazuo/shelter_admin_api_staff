@@ -33,7 +33,7 @@ class DisasterEntryController extends Controller
     {
         $params = $request->formattedQueryParams();
         return new DisasterEntryCollection([
-            'entries' => $this->disaster_entry_service->find($id, $params['disaster_shelter_id'] ?? NULL, $params['entered_at_from'] ?? NULL, $params['name_kana'] ?? NULL),
+            'entries' => $this->disaster_entry_service->find($id, $params['disaster_shelter_id'] ?? NULL, $params['entered_at_from'] ?? NULL, $params['name_kana'] ?? NULL, $params['per_page'] ?? 10),
         ]);
     }
 

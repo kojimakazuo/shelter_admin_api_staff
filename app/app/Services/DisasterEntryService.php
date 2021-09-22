@@ -20,7 +20,7 @@ class DisasterEntryService
     /**
      * 災害受付一覧
      */
-    public function find($disaster_id, $disaster_shelter_id, $entered_at_from, $name_kana)
+    public function find($disaster_id, $disaster_shelter_id, $entered_at_from, $name_kana, $per_page = 10)
     {
         $query = Entry::select('entries.*');
         $query->join('entry_sheets','entry_sheets.id','=','entries.entry_sheet_id');
@@ -35,7 +35,7 @@ class DisasterEntryService
             $query->where('name_kana', 'like', "$name_kana%");
         }
         $query->orderBy('entries.id', 'asc');
-        return $query->paginate(50);
+        return $query->paginate($per_page);
     }
 
     /**
