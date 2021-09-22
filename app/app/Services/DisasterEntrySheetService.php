@@ -15,7 +15,7 @@ class DisasterEntrySheetService
     /**
      * 一覧
      */
-    public function find($disaster_id, $entry_sheet_id, $created_at_from, $name_kana)
+    public function find($disaster_id, $entry_sheet_id, $created_at_from, $name_kana, $per_page = 10)
     {
         $query = EntrySheet::select('*');
         $query->doesntHave('entry');
@@ -31,7 +31,7 @@ class DisasterEntrySheetService
             $query->where('name_kana', 'like', "$name_kana%");
         }
         $query->orderBy('id', 'asc');
-        return $query->paginate(50);
+        return $query->paginate($per_page);
     }
 
     /**
