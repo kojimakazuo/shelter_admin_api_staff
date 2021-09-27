@@ -57,6 +57,7 @@ class DisasterController extends Controller
      */
     public function store(DisasterStoreRequest $request)
     {
+        // TODO: 現在発生中の災害がある場合は作成できないようにする
         return new DisasterResource($this->disaster_service->add($request->fillable()));
     }
 
