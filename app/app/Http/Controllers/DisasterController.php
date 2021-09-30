@@ -78,9 +78,13 @@ class DisasterController extends Controller
      */
     public function destroy($id)
     {
-        $disaster = $this->disaster_service->delete($id);
+        $disaster = $this->disaster_service->show($id);
         if (empty($disaster)) {
             return response()->notfound();
         }
+        if (empty($disaster->end_at)) {
+            return response()->badrequest(null, 'この災害は終了日時が未登録のため削除できません');
+        }
+        $this->disaster_service->delete($id);
     }
 }
