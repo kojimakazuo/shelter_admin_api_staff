@@ -68,11 +68,15 @@ class DisasterController extends Controller
      */
     public function update(DisasterUpdateRequest $request, $id)
     {
-        $disaster = $this->disaster_service->update($request->fillable(), $id);
+        $disaster = $this->disaster_service->show($id);
         if (empty($disaster)) {
             return response()->notfound();
         }
-        return new DisasterResource($disaster);
+        $current = $this->disaster_service->current();
+        if (!empty($current) && $disaster->id != $current->id && empty($request->fillable()['end_at'])) {
+            return response()->badrequest(null, '現在発生中の災害があるため終了日時を空にできません');
+        }
+        return new DisasterResource($this->disaster_service->update($request->fillable(), $id));
     }
 
     /**
