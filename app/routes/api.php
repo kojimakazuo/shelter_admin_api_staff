@@ -31,6 +31,8 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::get('/{id}', [DisasterController::class, 'show']);
         Route::post('', [DisasterController::class, 'store']);
         Route::put('/{id}', [DisasterController::class, 'update']);
+        Route::put('/close/{id}', [DisasterController::class, 'close']);
+        Route::put('/reopen/{id}', [DisasterController::class, 'reopen']);
         Route::delete('/{id}', [DisasterController::class, 'destroy']);
         Route::get('/{id}/entry_sheets', [DisasterEntrySheetController::class, 'index']);
         Route::get('entry_sheets/qrcode/{value}', [DisasterEntrySheetController::class, 'qrcode']);

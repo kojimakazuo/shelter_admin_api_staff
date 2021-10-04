@@ -72,11 +72,40 @@ class DisasterController extends Controller
         if (empty($disaster)) {
             return response()->notfound();
         }
-        $current = $this->disaster_service->current();
-        if (!empty($current) && $disaster->id != $current->id && empty($request->fillable()['end_at'])) {
-            return response()->badrequest(null, '現在発生中の災害があるため終了日時を空にできません');
-        }
         return new DisasterResource($this->disaster_service->update($request->fillable(), $id));
+    }
+
+    /**
+     * 災害 - 終了
+     */
+    public function close($id)
+    {
+        $disaster = $this->disaster_service->show($id);
+        if (empty($disaster)) {
+            return response()->notfound();
+        }
+        if ($disaster->isEnded()) {
+            return response()->badrequest(null, 'この災害はすでに終了しています');
+        }
+        return new DisasterResource($this->disaster_service->close($id));
+    }
+
+    /**
+     * 災害 - 再開
+     */
+    public function reopen($id)
+    {
+        $disaster = $this->disaster_service->show($id);
+        if (empty($disaster)) {
+            return response()->notfound();
+        }
+        if (!$disaster->isEnded()) {
+            return response()->badrequest(null, 'この災害は終了していません');
+        }
+        if ($this->disaster_service->isBeforeOrOccurring($id)) {
+            return response()->badrequest(null, '現在発生中もしくは発生前の災害があるため再開できません');
+        }
+        return new DisasterResource($this->disaster_service->reopen($id));
     }
 
     /**

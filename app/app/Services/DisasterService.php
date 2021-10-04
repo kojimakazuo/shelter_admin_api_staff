@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Disaster;
 use App\Models\DisasterShelter;
+use Illuminate\Support\Facades\DB;
 
 class DisasterService
 {
@@ -31,10 +32,12 @@ class DisasterService
      */
     public function add($request)
     {
-        // TODO: transaction
-        $disaster = new Disaster($request);
-        $disaster->save();
-        $this->addShelters($disaster, $request['shelters'], 'id');
+        $disaster = DB::transaction(function () use ($request) {
+            $disaster = new Disaster($request);
+            $disaster->save();
+            $this->addShelters($disaster, $request['shelters'], 'id');
+            return $disaster;
+        });
         return $disaster;
     }
 
@@ -70,7 +73,33 @@ class DisasterService
             $index = array_search($e['shelter_id'], array_column($disaster->shelters->all(), 'id'));
             return empty($e['id']) && $index === FALSE;
         }), 'shelter_id');
+    }
 
+    /**
+     * 災害避難所閉鎖
+     */
+    public function close($id)
+    {
+        $disaster = $this->show($id);
+        if (empty($disaster)) {
+            return;
+        }
+        $disaster->end_at = now();
+        $disaster->save();
+        return $this->show($disaster->id);
+    }
+
+    /**
+     * 災害避難所再開
+     */
+    public function reopen($id)
+    {
+        $disaster = $this->show($id);
+        if (empty($disaster)) {
+            return;
+        }
+        $disaster->end_at = null;
+        $disaster->save();
         return $this->show($disaster->id);
     }
 
@@ -108,6 +137,17 @@ class DisasterService
     }
 
     /**
+     * 現在発生中もしくは発生前の災害があるか
+     */
+    public function isBeforeOrOccurring($exclude_id)
+    {
+        $query = Disaster::select('*');
+        $query->whereNull('end_at'); // 終了していない
+        $query->where('id', '!=', $exclude_id); // 除外ID
+        return count($query->get()) > 0;
+    }
+
+    /**
      * 災害避難所詳細
      */
     public function showShelter($id)
@@ -122,7 +162,7 @@ class DisasterService
      */
     public function addShelters(Disaster $disaster, $shelters, $shelter_id_key)
     {
-        $disasterShelters = array_map(function($e) use ($disaster, $shelter_id_key) {
+        $disasterShelters = array_map(function ($e) use ($disaster, $shelter_id_key) {
             $disasterShelter = new DisasterShelter($e);
             $disasterShelter->disaster_id = $disaster->id;
             $disasterShelter->shelter_id = $e[$shelter_id_key];

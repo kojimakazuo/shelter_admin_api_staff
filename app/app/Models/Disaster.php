@@ -22,6 +22,21 @@ class Disaster extends Model
         'end_at' => 'datetime',
     ];
 
+    public function isCurrent()
+    {
+        return $this->start_at <= now() && $this->end_at == null;
+    }
+
+    public function isBeforeStart()
+    {
+        return $this->start_at > now() && $this->end_at == null;
+    }
+
+    public function isEnded()
+    {
+        return $this->end_at != null;
+    }
+
     public function disasterShelters()
     {
         return $this->hasMany(DisasterShelter::class);
