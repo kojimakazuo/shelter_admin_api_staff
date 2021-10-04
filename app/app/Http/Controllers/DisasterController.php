@@ -57,7 +57,9 @@ class DisasterController extends Controller
      */
     public function store(DisasterStoreRequest $request)
     {
-        // TODO: 現在発生中の災害がある場合は作成できないようにする
+        if ($this->disaster_service->isBeforeOrOccurring(null)) {
+            return response()->badrequest(null, '現在発生中もしくは発生前の災害があるため作成できません');
+        }
         return new DisasterResource($this->disaster_service->add($request->fillable()));
     }
 
@@ -66,11 +68,44 @@ class DisasterController extends Controller
      */
     public function update(DisasterUpdateRequest $request, $id)
     {
-        $disaster = $this->disaster_service->update($request->fillable(), $id);
+        $disaster = $this->disaster_service->show($id);
         if (empty($disaster)) {
             return response()->notfound();
         }
-        return new DisasterResource($disaster);
+        return new DisasterResource($this->disaster_service->update($request->fillable(), $id));
+    }
+
+    /**
+     * 災害 - 終了
+     */
+    public function close($id)
+    {
+        $disaster = $this->disaster_service->show($id);
+        if (empty($disaster)) {
+            return response()->notfound();
+        }
+        if ($disaster->isEnded()) {
+            return response()->badrequest(null, 'この災害はすでに終了しています');
+        }
+        return new DisasterResource($this->disaster_service->close($id));
+    }
+
+    /**
+     * 災害 - 再開
+     */
+    public function reopen($id)
+    {
+        $disaster = $this->disaster_service->show($id);
+        if (empty($disaster)) {
+            return response()->notfound();
+        }
+        if (!$disaster->isEnded()) {
+            return response()->badrequest(null, 'この災害は終了していません');
+        }
+        if ($this->disaster_service->isBeforeOrOccurring($id)) {
+            return response()->badrequest(null, '現在発生中もしくは発生前の災害があるため再開できません');
+        }
+        return new DisasterResource($this->disaster_service->reopen($id));
     }
 
     /**
@@ -78,9 +113,13 @@ class DisasterController extends Controller
      */
     public function destroy($id)
     {
-        $disaster = $this->disaster_service->delete($id);
+        $disaster = $this->disaster_service->show($id);
         if (empty($disaster)) {
             return response()->notfound();
         }
+        if (empty($disaster->end_at)) {
+            return response()->badrequest(null, 'この災害は終了日時が未登録のため削除できません');
+        }
+        $this->disaster_service->delete($id);
     }
 }

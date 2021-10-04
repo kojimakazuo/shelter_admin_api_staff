@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Condition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,9 +23,24 @@ class Disaster extends Model
         'end_at' => 'datetime',
     ];
 
+    public function isCurrent()
+    {
+        return $this->start_at <= now() && $this->end_at == null;
+    }
+
+    public function isBeforeStart()
+    {
+        return $this->start_at > now() && $this->end_at == null;
+    }
+
+    public function isEnded()
+    {
+        return $this->end_at != null;
+    }
+
     public function disasterShelters()
     {
-        return $this->hasMany(DisasterShelter::class);
+        return $this->hasMany(DisasterShelter::class)->where('condition', Condition::AVAILABLE);
     }
 
     public function shelters()
