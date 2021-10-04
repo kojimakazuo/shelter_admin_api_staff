@@ -40,6 +40,11 @@ class Disaster extends Model
 
     public function disasterShelters()
     {
+        return $this->hasMany(DisasterShelter::class);
+    }
+
+    public function availableDisasterShelters()
+    {
         return $this->hasMany(DisasterShelter::class)->where('condition', Condition::AVAILABLE);
     }
 
@@ -51,5 +56,10 @@ class Disaster extends Model
     public function entries()
     {
         return $this->hasManyThrough(Entry::class, DisasterShelter::class);
+    }
+
+    public function availableEntries()
+    {
+        return $this->hasManyThrough(Entry::class, DisasterShelter::class)->where('disaster_shelters.condition', Condition::AVAILABLE);
     }
 }
