@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Condition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,7 +40,7 @@ class Disaster extends Model
 
     public function disasterShelters()
     {
-        return $this->hasMany(DisasterShelter::class);
+        return $this->hasMany(DisasterShelter::class)->where('condition', Condition::AVAILABLE);
     }
 
     public function shelters()

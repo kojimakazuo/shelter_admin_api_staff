@@ -18,6 +18,7 @@ class DisasterShelterResource extends JsonResource
             'remaining_number_of_capacities' => $this->capacity - $number_of_entries,
             'entry_rate' => floor(($number_of_entries / $this->capacity * 100) * 100) / 100,
             'staff_user' => new StaffUserResource($this->staffUser),
+            'condition' => $this->condition,
             'shelter' => new ShelterResource($this->shelter),
         ];
     }

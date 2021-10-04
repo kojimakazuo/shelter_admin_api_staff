@@ -57,8 +57,8 @@ class DisasterController extends Controller
      */
     public function store(DisasterStoreRequest $request)
     {
-        if (!empty($this->disaster_service->current())) {
-            return response()->badrequest(null, '現在発生中の災害があるため新しい災害を作成できません');
+        if ($this->disaster_service->isBeforeOrOccurring(null)) {
+            return response()->badrequest(null, '現在発生中もしくは発生前の災害があるため作成できません');
         }
         return new DisasterResource($this->disaster_service->add($request->fillable()));
     }

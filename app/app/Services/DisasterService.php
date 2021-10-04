@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Condition;
 use App\Models\Disaster;
 use App\Models\DisasterShelter;
 use Illuminate\Support\Facades\DB;
@@ -46,33 +47,38 @@ class DisasterService
      */
     public function update($request, $id)
     {
-        // TODO: transaction
         $disaster = $this->show($id);
         if (empty($disaster)) {
             return;
         }
-        $disaster->fill($request);
-        $disaster->save();
-
-        $disasterShelters = $disaster->disasterShelters;
-        $newDisasterShelters = $request['disaster_shelters'];
-        foreach ($disasterShelters as &$disasterShelter) {
-            $index = array_search($disasterShelter->id, array_column($newDisasterShelters, 'id'));
-            if ($index !== FALSE) {
-                // idがある場合は更新
-                $this->updateShelter($disasterShelter, $newDisasterShelters[$index]);
-                continue;
+        DB::transaction(function () use ($request, $disaster) {
+            // Disaster
+            $disaster->fill($request);
+            $disaster->save();
+            // DisasterShelters
+            $newDisasterShelters = $request['disaster_shelters'];
+            foreach ($disaster->disasterShelters as &$disasterShelter) {
+                // 登録済の災害避難所がリクエストデータにあるか検索する
+                $index = array_search($disasterShelter->id, array_column($newDisasterShelters, 'id'));
+                if ($index !== FALSE) {
+                    // ある場合は利用可能&更新する
+                    $this->updateShelterCondition($disasterShelter->id, Condition::AVAILABLE);
+                    $this->updateShelter($disasterShelter, $newDisasterShelters[$index]);
+                    continue;
+                }
+                // ない場合は利用不可にする
+                $this->updateShelterCondition($disasterShelter->id, Condition::UNAVAILABLE);
             }
-            // 更新データリストにidがない場合は削除
-            $this->deleteShelter($disasterShelter->id);
-        }
-        unset($disasterShelter);
+            unset($disasterShelter);
 
-        $this->addShelters($disaster, array_filter($newDisasterShelters, function($e) use ($disaster) {
-            // idがnull & shelter_idが重複していないデータは登録
-            $index = array_search($e['shelter_id'], array_column($disaster->shelters->all(), 'id'));
-            return empty($e['id']) && $index === FALSE;
-        }), 'shelter_id');
+            $this->addShelters($disaster, array_filter($newDisasterShelters, function ($e) use ($disaster) {
+                // idがnull & shelter_idが重複していないデータは登録
+                $index = array_search($e['shelter_id'], array_column($disaster->shelters->all(), 'id'));
+                return empty($e['id']) && $index === FALSE;
+            }), 'shelter_id');
+            return $disaster;
+        });
+        return $this->show($disaster->id);
     }
 
     /**
@@ -143,7 +149,9 @@ class DisasterService
     {
         $query = Disaster::select('*');
         $query->whereNull('end_at'); // 終了していない
-        $query->where('id', '!=', $exclude_id); // 除外ID
+        if ($exclude_id) {
+            $query->where('id', '!=', $exclude_id); // 除外ID
+        }
         return count($query->get()) > 0;
     }
 
@@ -181,16 +189,17 @@ class DisasterService
         $shelter->save();
     }
 
+
     /**
-     * 災害避難所削除
+     * 災害避難所利用可否変更
      */
-    public function deleteShelter($id)
+    public function updateShelterCondition($id, $condition)
     {
         $shelter = $this->showShelter($id);
         if (empty($shelter)) {
             return;
         }
-        $shelter->deleted_by = auth()->user()->id;
-        return $shelter->delete();
+        $shelter->condition = $condition;
+        $shelter->save();
     }
 }
