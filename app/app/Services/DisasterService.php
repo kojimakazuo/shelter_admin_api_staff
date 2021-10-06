@@ -166,6 +166,17 @@ class DisasterService
     }
 
     /**
+     * 利用可能な災害避難所か
+     */
+    public function availableShelter($id)
+    {
+        $query = DisasterShelter::select('*');
+        $query->where('id', $id);
+        $query->where('condition', Condition::AVAILABLE);
+        return $query->first() != null;
+    }
+
+    /**
      * 災害避難所登録(一括)
      */
     public function addShelters(Disaster $disaster, $shelters, $shelter_id_key)
