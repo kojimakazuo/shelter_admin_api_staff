@@ -6,6 +6,7 @@ use App\Http\Controllers\DisasterController;
 use App\Http\Controllers\DisasterEntryController;
 use App\Http\Controllers\DisasterEntrySheetController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NativeAppController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\StaffUserController;
@@ -69,6 +70,10 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('', [StaffUserController::class, 'store']);
         Route::put('/{id}', [StaffUserController::class, 'update']);
         Route::delete('/{id}', [StaffUserController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'native_apps'], function ($router) {
+        Route::get('', [NativeAppController::class, 'index']);
+        Route::get('/download_url/android/{path}', [NativeAppController::class, 'androidDownloadUrl']);
     });
 });
 
