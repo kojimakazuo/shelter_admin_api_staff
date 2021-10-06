@@ -101,6 +101,14 @@ class DisasterEntryController extends Controller
      */
     public function web(DisasterEntryWebRequest $request)
     {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            return response()->badrequest(null, '現在発生中の災害はありません');
+        }
+        // 災害避難所利用可能チェック
+        if (!$this->disaster_service->availableShelter($request->disaster_shelter_id)) {
+            return response()->badrequest(null, 'この避難所は現在利用できません');
+        }
         $entry_sheet_id = $request->fillable()['entry_sheet_id'];
         // 受付済みチェック
         if (!empty($this->disaster_entry_service->findByEntrySheetId($entry_sheet_id))) {
@@ -128,6 +136,10 @@ class DisasterEntryController extends Controller
         if (empty($disaster)) {
             return response()->badrequest(null, '現在発生中の災害はありません');
         }
+        // 災害避難所利用可能チェック
+        if (!$this->disaster_service->availableShelter($request->disaster_shelter_id)) {
+            return response()->badrequest(null, 'この避難所は現在利用できません');
+        }
         // 管理番号使用済みチェック
         $sheet_number = $request->fillable()['sheet_number'];
         if (!empty($this->disaster_entry_service->findBySheetNumber($disaster->id, $sheet_number))) {
@@ -142,12 +154,20 @@ class DisasterEntryController extends Controller
      */
     public function out($id)
     {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            return response()->badrequest(null, '現在発生中の災害はありません');
+        }
         $entry = $this->disaster_entry_service->show($id);
         if (empty($entry)) {
             return response()->notfound();
         }
         if (!empty($entry->exited_at)) {
             return response()->badrequest(null, 'この避難者はすでに退場済です');
+        }
+        // 災害避難所利用可能チェック
+        if (!$this->disaster_service->availableShelter($entry->disasterShelter->id)) {
+            return response()->badrequest(null, 'この避難所は現在利用できません');
         }
         $this->disaster_entry_service->out($id);
     }
@@ -157,12 +177,20 @@ class DisasterEntryController extends Controller
      */
     public function in($id)
     {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            return response()->badrequest(null, '現在発生中の災害はありません');
+        }
         $entry = $this->disaster_entry_service->show($id);
         if (empty($entry)) {
             return response()->notfound();
         }
         if (!empty($entry->exited_at)) {
             return response()->badrequest(null, 'この避難者はすでに退場済です');
+        }
+        // 災害避難所利用可能チェック
+        if (!$this->disaster_service->availableShelter($entry->disasterShelter->id)) {
+            return response()->badrequest(null, 'この避難所は現在利用できません');
         }
         $this->disaster_entry_service->in($id);
     }
@@ -172,12 +200,20 @@ class DisasterEntryController extends Controller
      */
     public function exit($id)
     {
+        $disaster = $this->disaster_service->current();
+        if (empty($disaster)) {
+            return response()->badrequest(null, '現在発生中の災害はありません');
+        }
         $entry = $this->disaster_entry_service->show($id);
         if (empty($entry)) {
             return response()->notfound();
         }
         if (!empty($entry->exited_at)) {
             return response()->badrequest(null, 'この避難者はすでに退場済です');
+        }
+        // 災害避難所利用可能チェック
+        if (!$this->disaster_service->availableShelter($entry->disasterShelter->id)) {
+            return response()->badrequest(null, 'この避難所は現在利用できません');
         }
         return new DisasterEntryResource($this->disaster_entry_service->exit($id));
     }
