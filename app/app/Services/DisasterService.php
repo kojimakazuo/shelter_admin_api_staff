@@ -14,7 +14,7 @@ class DisasterService
      */
     public function find()
     {
-        $query = Disaster::select('*');
+        $query = Disaster::select('*')->orderBy('end_at');
         return $query->get();
     }
 
