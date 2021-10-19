@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Condition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,5 +38,15 @@ class DisasterShelter extends Model
     public function entries()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    public function numberOfEntries()
+    {
+        return intval($this->entries()->count());
+    }
+
+    public function numberOfEvacuees()
+    {
+        return intval($this->entries()->join('entry_sheets', 'entries.entry_sheet_id', '=', 'entry_sheets.id')->sum("entry_sheets.number_of_evacuees"));
     }
 }

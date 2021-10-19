@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\APIResponseServiceProvider::class,
         App\Providers\ValidateServiceProvider::class,
+        App\Providers\DataBaseQueryServiceProvider::class,
 
     ],
 

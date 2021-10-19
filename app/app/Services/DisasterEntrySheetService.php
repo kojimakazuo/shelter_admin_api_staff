@@ -84,13 +84,14 @@ class DisasterEntrySheetService
     public function updateWeb($id, $request)
     {
         $entry_sheet = DB::transaction(function () use ($id, $request) {
+            $new_entry_sheet_web_companions = $request['companions'];
             // Save EntrySheet
             $entry_sheet = EntrySheet::find($id);
+            $entry_sheet->number_of_evacuees = count($new_entry_sheet_web_companions) + 1;
             $entry_sheet->fill($request)->save();
             // Save EntrySheetWeb
             $entry_sheet->web->fill($request)->save();
             // Save EntrySheetWebCompanions
-            $new_entry_sheet_web_companions = $request['companions'];
             foreach ($entry_sheet->web->companions as &$companion) {
                 $index = array_search($companion->id, array_column($new_entry_sheet_web_companions, 'id'));
                 if ($index !== FALSE) {
@@ -127,16 +128,17 @@ class DisasterEntrySheetService
         $request['disaster_id'] = $disaster_id;
         $request['type'] = EntrySheetType::PAPER;
         $entry_sheet = DB::transaction(function () use ($request) {
+            $entry_sheet_paper_companions = array_map(function($companion) {
+                return new EntrySheetPaperCompanion($companion);
+            }, $request['companions']);
             // Save EntrySheet
             $entry_sheet = new EntrySheet($request);
+            $entry_sheet->number_of_evacuees = count($entry_sheet_paper_companions) + 1;
             $entry_sheet->save();
             // // Save EntrySheetPaper
             $entry_sheet_paper = new EntrySheetPaper($request);
             $entry_sheet->paper()->save($entry_sheet_paper);
             // Save EntrySheetPaperCompanions
-            $entry_sheet_paper_companions = array_map(function($companion) {
-                return new EntrySheetPaperCompanion($companion);
-            }, $request['companions']);
             $entry_sheet_paper->companions()->saveMany($entry_sheet_paper_companions);
             $this->updatePaperFrontImage($entry_sheet->id, $request['front_image']);
             $this->updatePaperBackImage($entry_sheet->id, $request['back_image']);
@@ -151,13 +153,14 @@ class DisasterEntrySheetService
     public function updatePaper($id, $request)
     {
         $entry_sheet = DB::transaction(function () use ($id, $request) {
+            $new_entry_sheet_paper_companions = $request['companions'];
             // Save EntrySheet
             $entry_sheet = EntrySheet::find($id);
+            $entry_sheet->number_of_evacuees = count($new_entry_sheet_paper_companions) + 1;
             $entry_sheet->fill($request)->save();
             // Save EntrySheetPaper
             $entry_sheet->paper->fill($request)->save();
             // Save EntrySheetPaperCompanions
-            $new_entry_sheet_paper_companions = $request['companions'];
             foreach ($entry_sheet->paper->companions as &$companion) {
                 $index = array_search($companion->id, array_column($new_entry_sheet_paper_companions, 'id'));
                 if ($index !== FALSE) {
