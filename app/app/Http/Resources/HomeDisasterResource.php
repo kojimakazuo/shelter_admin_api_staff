@@ -13,9 +13,9 @@ class HomeDisasterResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'number_of_shelters' => count($this->availableDisasterShelters),
-            'number_of_entries' => count($this->availableEntries),
-            'number_of_capacities' => array_sum(array_column($this->availableDisasterShelters->all(), 'capacity')),
+            'number_of_shelters' => $this->numberOfAvailableDisasterShelters(),
+            'number_of_capacities' => $this->numberOfAvailableDisasterSheltersCapacities(),
+            'number_of_evacuees' => $this->numberOfEvacuees(),
             'start_at' => $this->start_at->format('Y-m-d\TH:i:s'),
             'end_at' => optional($this->end_at)->format('Y-m-d\TH:i:s'),
             'disaster_shelters' => HomeDisasterShelterResource::collection($this->disasterShelters),

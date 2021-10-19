@@ -48,9 +48,19 @@ class Disaster extends Model
         return $this->hasMany(DisasterShelter::class)->where('condition', Condition::AVAILABLE);
     }
 
+    public function numberOfAvailableDisasterShelters()
+    {
+        return $this->availableDisasterShelters()->count();
+    }
+
     public function shelters()
     {
         return $this->belongsToMany(Shelter::class, 'disaster_shelters', 'disaster_id', 'shelter_id')->whereNull('disaster_shelters.deleted_at');
+    }
+
+    public function entrySheets()
+    {
+        return $this->hasMany(EntrySheet::class);
     }
 
     public function entries()
@@ -61,5 +71,22 @@ class Disaster extends Model
     public function availableEntries()
     {
         return $this->hasManyThrough(Entry::class, DisasterShelter::class)->where('disaster_shelters.condition', Condition::AVAILABLE);
+    }
+
+    public function numberOfAvailableEntries()
+    {
+        return $this->availableEntries()->count();
+    }
+
+    public function numberOfAvailableDisasterSheltersCapacities()
+    {
+        return intval($this->availableDisasterShelters()->sum('capacity'));
+    }
+
+    public function numberOfEvacuees()
+    {
+        return intval($this->entrySheets()->whereHas('entry.disasterShelter', function ($query) {
+            return $query->where('condition', Condition::AVAILABLE);
+        })->sum("number_of_evacuees"));
     }
 }
