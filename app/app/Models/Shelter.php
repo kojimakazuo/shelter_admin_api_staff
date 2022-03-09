@@ -26,4 +26,9 @@ class Shelter extends Model
     {
         return $this->belongsTo(StaffUser::class);
     }
+
+    public function shelterImages()
+    {
+        return $this->hasMany(ShelterImage::class);
+    }
 }

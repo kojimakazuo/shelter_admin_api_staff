@@ -12,6 +12,8 @@ class ShelterStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'images' => 'array',
+            'images.*' => 'base64|base64_ext_in:jpeg,jpg,png|base64_max:5',
             'name'  => 'required|max:255',
             'name_kana'  => 'required|max:255|hiragana',
             'postal_code' => 'required|max:8',
@@ -34,6 +36,9 @@ class ShelterStoreRequest extends FormRequest
     public function messages()
     {
         return [
+            'images.*.base64' => ':attributeの形式が正しくありません',
+            'images.*.base64_ext_in' => 'サポートされている:attributeの拡張子は:extsです',
+            'images.*.base64_max' => ':attributeの最大サイズは:maxMBです',
             'name.required' => ':attributeは必須です',
             'name.max'  => ':attributeが長すぎます',
             'name_kana.required' => ':attributeは必須です',
@@ -67,6 +72,8 @@ class ShelterStoreRequest extends FormRequest
     public function attributes()
     {
         return [
+            'images' => '避難所画像',
+            'images.*' => '画像',
             'name' => '避難所名',
             'name_kana' => '避難所名(かな)',
             'postal_code' => '郵便番号',
@@ -80,23 +87,5 @@ class ShelterStoreRequest extends FormRequest
             'facility_info' => '設備情報',
             'staff_user_id' => '責任者',
         ];
-    }
-
-    public function fillable()
-    {
-        return $this->only([
-            'name',
-            'name_kana',
-            'postal_code',
-            'address',
-            'phone_number',
-            'latitude',
-            'longitude',
-            'type',
-            'target_disaster_types',
-            'capacity',
-            'facility_info',
-            'staff_user_id',
-        ]);
     }
 }

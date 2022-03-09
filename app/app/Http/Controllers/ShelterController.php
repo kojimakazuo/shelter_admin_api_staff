@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShelterStoreImageRequest;
 use App\Http\Requests\ShelterStoreRequest;
 use App\Http\Resources\ShelterCollection;
+use App\Http\Resources\ShelterImageResource;
 use App\Http\Resources\ShelterResource;
 use App\Services\ShelterService;
 
@@ -44,7 +46,10 @@ class ShelterController extends Controller
      */
     public function store(ShelterStoreRequest $request)
     {
-        return new ShelterResource($this->shelter_service->add($request->fillable()));
+        $data = $request->validated();
+        $shelter = $this->shelter_service->add($data);
+        $this->shelter_service->addImages($shelter->id, $data['images']);
+        return new ShelterResource($shelter);
     }
 
     /**
@@ -68,5 +73,26 @@ class ShelterController extends Controller
         if (empty($shelter)) {
             return response()->notfound();
         }
+    }
+
+    /**
+     * 避難所画像 - 登録
+     */
+    public function storeShelterImage(int $id, ShelterStoreImageRequest $request)
+    {
+        $data = $request->validated();
+        $this->shelter_service->addImage($id, $data['image']);
+        $shelter = $this->shelter_service->show($id);
+        return ShelterImageResource::collection($shelter->shelterImages);
+    }
+
+    /**
+     * 避難所画像 - 削除
+     */
+    public function destroyShelterImage($id, $image_id)
+    {
+        $this->shelter_service->deleteImage($id, $image_id);
+        $shelter = $this->shelter_service->show($id);
+        return ShelterImageResource::collection($shelter->shelterImages);
     }
 }

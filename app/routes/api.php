@@ -56,6 +56,8 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('', [ShelterController::class, 'store']);
         Route::put('/{id}', [ShelterController::class, 'update']);
         Route::delete('/{id}', [ShelterController::class, 'destroy']);
+        Route::post('/{id}/shellter_images', [ShelterController::class, 'storeShelterImage']);
+        Route::delete('/{id}/shellter_images/{image_id}', [ShelterController::class, 'destroyShelterImage']);
     });
     Route::group(['prefix' => 'notices'], function ($router) {
         Route::get('', [NoticeController::class, 'index']);
