@@ -28,7 +28,7 @@ class Base64Max implements Rule
      */
     public function passes($attribute, $value, $parameters = [])
     {
-        preg_match('/data:image\/\w+;base64,(.*)/u', $value, $matches);
+        preg_match('/data:image\/\w+.*;base64,(.*)/u', $value, $matches);
         if (!isset($matches[1])) return false;
         return strlen(base64_decode($matches[1])) <= ($parameters[0] * 1000 * 1000);
     }
