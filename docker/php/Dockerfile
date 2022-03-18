@@ -2,7 +2,7 @@ FROM php:7.4-fpm
 COPY php.ini /usr/local/etc/php/
 
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev libzip-dev \
+    && apt-get install -y zlib1g-dev libzip-dev unzip \
     && docker-php-ext-install pdo pdo_mysql zip
 
 RUN pecl install xdebug \
