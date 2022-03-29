@@ -141,7 +141,9 @@ class DisasterEntrySheetService
             // Save EntrySheetPaperCompanions
             $entry_sheet_paper->companions()->saveMany($entry_sheet_paper_companions);
             $this->updatePaperFrontImage($entry_sheet->id, $request['front_image']);
-            $this->updatePaperBackImage($entry_sheet->id, $request['back_image']);
+            if (isset($request['back_image'])) {
+                $this->updatePaperBackImage($entry_sheet->id, $request['back_image']);
+            }
             return $entry_sheet;
         });
         return $entry_sheet;

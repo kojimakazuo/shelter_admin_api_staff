@@ -12,9 +12,9 @@ class DisasterEntrySheetWebRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'  => 'required|max:255',
+            'name'  => 'nullable|max:255',
             'name_kana'  => 'required|max:255|hiragana',
-            'temperature' => 'required|numeric',
+            'temperature' => 'nullable|numeric',
             'postal_code' => 'required|max:8',
             'address' => 'required|max:255',
             'phone_number' => 'required|max:13',
@@ -25,9 +25,9 @@ class DisasterEntrySheetWebRequest extends FormRequest
             'number_of_in_car' => 'required_if:stay_in_car,true|nullable|integer|min:1',
             'companions'  => 'nullable|array',
             'companions.*.id'  => 'integer',
-            'companions.*.name'  => 'required|max:255',
+            'companions.*.name'  => 'nullable|max:255',
             'companions.*.name_kana'  => 'required|max:255|hiragana',
-            'companions.*.temperature' => 'required|numeric',
+            'companions.*.temperature' => 'nullable|numeric',
             'companions.*.birthday' => 'required|date_format:Y-m-d',
             'companions.*.gender' => ['required', Rule::in(Gender::values())],
             'enquetes.health'  => 'required|array',
@@ -38,12 +38,10 @@ class DisasterEntrySheetWebRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => ':attributeは必須です',
             'name.max'  => ':attributeが長すぎます',
             'name_kana.required' => ':attributeは必須です',
             'name_kana.max'  => ':attributeが長すぎます',
             'name_kana.hiragana'  => ':attributeはひらがなで入力してください',
-            'temperature.required' => ':attributeは必須です',
             'temperature.numeric'  => ':attributeは数値で指定してください',
             'postal_code.required' => ':attributeは必須です',
             'postal_code.max'  => ':attributeは8文字以下で入力してください',
@@ -62,12 +60,10 @@ class DisasterEntrySheetWebRequest extends FormRequest
             'number_of_in_car.required_if' => '車中避難を選択した場合は:attributeは必須です',
             'number_of_in_car.integer'  => ':attributeは数値で指定してください',
             'number_of_in_car.min'  => ':attributeは1以上で指定してください',
-            'companions.*.name.required'  => ':attributeは必須です',
             'companions.*.name.max'  => ':attributeが長すぎます',
             'companions.*.name_kana.required' => ':attributeは必須です',
             'companions.*.name_kana.max'  => ':attributeが長すぎます',
             'companions.*.name_kana.hiragana'  => ':attributeはひらがなで入力してください',
-            'companions.*.temperature.required' => ':attributeは必須です',
             'companions.*.temperature.numeric'  => ':attributeは数値で指定してください',
             'companions.*.birthday.required' => ':attributeは必須です',
             'companions.*.birthday.date_format' => ':attributeの形式が正しくありません',

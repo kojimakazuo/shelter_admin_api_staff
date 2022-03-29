@@ -14,19 +14,19 @@ class DisasterEntryPaperRequest extends FormRequest
         return [
             'disaster_shelter_id'  => 'required|exists:disaster_shelters,id',
             'front_image'  => 'required|base64|base64_ext_in:jpeg,jpg,png|base64_max:5',
-            'back_image'  => 'required|base64|base64_ext_in:jpeg,jpg,png|base64_max:5',
+            'back_image'  => 'nullable|base64|base64_ext_in:jpeg,jpg,png|base64_max:5',
             'sheet_number'  => 'required|integer',
             'site_type' => [
                 'required',
                 Rule::in(EntrySiteType::values()),
             ],
-            'name'  => 'required|max:255',
+            'name'  => 'nullable|max:255',
             'name_kana'  => 'required|max:255|hiragana',
             'gender' => ['required', Rule::in(Gender::values())],
-            'temperature' => 'required|numeric',
+            'temperature' => 'nullable|numeric',
             'companions' => 'array',
             'companions.*.gender' => ['required', Rule::in(Gender::values())],
-            'companions.*.temperature' => 'required|numeric',
+            'companions.*.temperature' => 'nullable|numeric',
         ];
     }
 
@@ -40,18 +40,15 @@ class DisasterEntryPaperRequest extends FormRequest
             'title.max'  => ':attributeが長すぎます',
             'site_type.required' => ':attributeは必須です',
             'site_type.in' => ':attributeの形式が正しくありません',
-            'name.required' => ':attributeは必須です',
             'name.max'  => ':attributeが長すぎます',
             'name_kana.required' => ':attributeは必須です',
             'name_kana.max'  => ':attributeが長すぎます',
             'name_kana.hiragana'  => ':attributeはひらがなで入力してください',
             'gender.required' => ':attributeは必須です',
             'gender.in' => ':attributeの形式が正しくありません',
-            'temperature.required' => ':attributeは必須です',
             'temperature.numeric'  => ':attributeは数値で指定してください',
             'companions.*.gender.required' => ':attributeは必須です',
             'companions.*.gender.in' => ':attributeの形式が正しくありません',
-            'companions.*.temperature.required' => ':attributeは必須です',
             'companions.*.temperature.numeric'  => ':attributeは数値で指定してください',
         ];
     }
