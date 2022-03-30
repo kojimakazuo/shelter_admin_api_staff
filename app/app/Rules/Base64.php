@@ -28,7 +28,7 @@ class Base64 implements Rule
      */
     public function passes($attribute, $value)
     {
-        preg_match('/data:image\/(\w+);base64,(.*)/u', $value, $matches);
+        preg_match('/data:image\/(\w+).*;base64,(.*)/u', $value, $matches);
         return count($matches) === 3;
     }
 

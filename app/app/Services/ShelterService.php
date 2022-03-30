@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Shelter;
+use App\Models\ShelterFacility;
 use App\Models\ShelterImage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ShelterService
@@ -30,22 +32,62 @@ class ShelterService
      */
     public function add($request)
     {
-        $shelter = new Shelter($request);
-        $shelter->save();
+        $shelter = DB::transaction(function () use ($request) {
+            $shelter = new Shelter($request);
+            $shelter->save();
+            $shelterFacilities = array_map(function ($facility_id) use ($shelter) {
+                $shelterFacility = new ShelterFacility();
+                $shelterFacility->shelter_id = $shelter->id;
+                $shelterFacility->facility_id = $facility_id;
+                return $shelterFacility;
+            }, $request['facility_ids']);
+            $shelter->shelterFacilities()->saveMany($shelterFacilities);
+            return $shelter;
+        });
         return $shelter;
     }
 
     /**
      * 避難所更新
      */
-    public function update($request, $id)
+    public function update($id, $request)
     {
         $shelter = $this->show($id);
         if (empty($shelter)) {
             return;
         }
-        $shelter->fill($request);
-        $shelter->save();
+        DB::transaction(function () use ($request, $shelter) {
+            // Shelter
+            $shelter->fill($request);
+            $shelter->save();
+            // ShelterFacilities
+            $newShelterFacilities = $request['shelter_facilities'];
+            foreach ($shelter->shelterFacilities as &$shelterFacility) {
+                // 登録済の避難所設備がリクエストデータにあるか検索する
+                $index = array_search($shelterFacility->id, array_column($newShelterFacilities, 'id'));
+                if ($index !== FALSE) {
+                    // ある場合は何もしない
+                    continue;
+                }
+                // ない場合は削除する
+                $shelterFacility->delete();
+            }
+            unset($shelterFacility);
+
+            $createShelterFacilities = array_filter($newShelterFacilities, function ($e) use ($shelter) {
+                // idがnull & facility_idが重複していないデータは登録
+                $index = array_search($e['facility_id'], array_column($shelter->shelterFacilities->all(), 'id'));
+                return empty($e['id']) && $index === FALSE;
+            });
+            $shelterFacilities = array_map(function ($shelter_facility) use ($shelter) {
+                $shelterFacility = new ShelterFacility();
+                $shelterFacility->shelter_id = $shelter->id;
+                $shelterFacility->facility_id = $shelter_facility['facility_id'];
+                return $shelterFacility;
+            }, $createShelterFacilities);
+            $shelter->shelterFacilities()->saveMany($shelterFacilities);
+            return $shelter;
+        });
         return $shelter;
     }
 
@@ -58,13 +100,17 @@ class ShelterService
         if (empty($shelter)) {
             return;
         }
-        $shelter->deleted_by = auth()->user()->id;
-        $result = $shelter->delete();
-        if (!$result) {
-            return;
-        }
-        $shelter->shelterImages()->delete();
-        Storage::disk('s3')->deleteDirectory("shelters/$id");
+        $result = DB::transaction(function () use ($shelter) {
+            $shelter->deleted_by = auth()->user()->id;
+            $result = $shelter->delete();
+            if (!$result) {
+                return;
+            }
+            $shelter->shelterFacilities()->delete();
+            $shelter->shelterImages()->delete();
+            Storage::disk('s3')->deleteDirectory("shelters/$shelter->id");
+            return $result;
+        });
         return $result;
     }
 

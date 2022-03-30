@@ -23,6 +23,7 @@ class ShelterResource extends JsonResource
             'type' => $this->type,
             'target_disaster_types' => $this->target_disaster_types,
             'capacity' => $this->capacity,
+            'shelter_facilities' => ShelterFacilityResource::collection($this->shelterFacilities),
             'facility_info' => $this->facility_info,
             'staff_user' => new StaffUserResource($this->staffUser),
         ];

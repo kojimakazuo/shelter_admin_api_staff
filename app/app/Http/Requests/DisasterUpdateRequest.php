@@ -36,7 +36,6 @@ class DisasterUpdateRequest extends FormRequest
             'start_at.date_format' => ':attributeの形式が正しくありません',
             'end_at.date_format' => ':attributeの形式が正しくありません',
             'disaster_shelters.required' => ':attributeは必須です',
-            'disaster_shelters.*.id.required' => ':attributeは必須です',
             'disaster_shelters.*.id.distinct' => ':attributeが重複しています',
             'disaster_shelters.*.id.exists' => ':attributeの指定が正しくありません',
             'disaster_shelters.*.capacity.required' => ':attributeは必須です',

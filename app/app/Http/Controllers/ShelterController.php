@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ShelterStoreImageRequest;
 use App\Http\Requests\ShelterStoreRequest;
+use App\Http\Requests\ShelterUpdateRequest;
 use App\Http\Resources\ShelterCollection;
 use App\Http\Resources\ShelterImageResource;
 use App\Http\Resources\ShelterResource;
@@ -32,7 +33,7 @@ class ShelterController extends Controller
     /**
      * 避難所 - 詳細
      */
-    public function show($id)
+    public function show(int $id)
     {
         $shelter = $this->shelter_service->show($id);
         if (empty($shelter)) {
@@ -55,9 +56,9 @@ class ShelterController extends Controller
     /**
      * 避難所 - 更新
      */
-    public function update(ShelterStoreRequest $request, $id)
+    public function update(int $id, ShelterUpdateRequest $request)
     {
-        $shelter = $this->shelter_service->update($request->fillable(), $id);
+        $shelter = $this->shelter_service->update($id, $request->validated());
         if (empty($shelter)) {
             return response()->notfound();
         }
@@ -67,7 +68,7 @@ class ShelterController extends Controller
     /**
      * 避難所 - 削除
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $shelter = $this->shelter_service->delete($id);
         if (empty($shelter)) {
@@ -89,7 +90,7 @@ class ShelterController extends Controller
     /**
      * 避難所画像 - 削除
      */
-    public function destroyShelterImage($id, $image_id)
+    public function destroyShelterImage(int $id, int $image_id)
     {
         $this->shelter_service->deleteImage($id, $image_id);
         $shelter = $this->shelter_service->show($id);

@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NativeAppController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ShelterController;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\StaffUserController;
 
 /*
@@ -58,6 +59,14 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::delete('/{id}', [ShelterController::class, 'destroy']);
         Route::post('/{id}/shellter_images', [ShelterController::class, 'storeShelterImage']);
         Route::delete('/{id}/shellter_images/{image_id}', [ShelterController::class, 'destroyShelterImage']);
+    });
+    Route::group(['prefix' => 'facilities'], function ($router) {
+        Route::get('', [FacilityController::class, 'index']);
+        Route::get('/{id}', [FacilityController::class, 'show']);
+        Route::post('', [FacilityController::class, 'store']);
+        Route::put('/{id}', [FacilityController::class, 'update']);
+        Route::delete('/{id}', [FacilityController::class, 'destroy']);
+        Route::put('/{id}/image', [FacilityController::class, 'updateImage']);
     });
     Route::group(['prefix' => 'notices'], function ($router) {
         Route::get('', [NoticeController::class, 'index']);

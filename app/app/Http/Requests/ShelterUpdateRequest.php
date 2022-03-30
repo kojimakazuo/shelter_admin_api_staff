@@ -7,7 +7,7 @@ use App\Enums\ShelterType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ShelterStoreRequest extends FormRequest
+class ShelterUpdateRequest extends FormRequest
 {
     public function rules()
     {
@@ -28,8 +28,15 @@ class ShelterStoreRequest extends FormRequest
             'target_disaster_types' => 'required|array',
             'target_disaster_types.*' => Rule::in(DisasterType::values()),
             'capacity' => 'required|integer|min:1',
-            'facility_ids' => 'array',
-            'facility_ids.*' => 'exists:facilities,id',
+            'shelter_facilities' => 'array',
+            'shelter_facilities.*.id' => [
+                'nullable',
+                'distinct',
+                Rule::exists('shelter_facilities', 'id')->where(function ($query) {
+                    $query->where('shelter_id', $this->id);
+                }),
+            ],
+            'shelter_facilities.*.facility_id' => 'required_if:shelter_facilities.*.id,null|exists:facilities,id',
             'facility_info' => 'nullable|max:1000',
             'staff_user_id' => 'required|exists:staff_users,id',
         ];
@@ -64,7 +71,10 @@ class ShelterStoreRequest extends FormRequest
             'capacity.required' => ':attributeは必須です',
             'capacity.integer'  => ':attributeは数値で指定してください',
             'capacity.min'  => ':attributeは1以上で指定してください',
-            'facility_ids.*.exists' => '指定された:attributeは存在しません',
+            'shelter_facilities.*.id.distinct' => ':attributeが重複しています',
+            'shelter_facilities.*.id.exists' => ':attributeの指定が正しくありません',
+            'shelter_facilities.*.facility_id.required_if' => 'idがnullの場合は:attributeは必須です',
+            'shelter_facilities.*.facility_id.exists' => ':attributeの指定が正しくありません',
             'facility_info.required' => ':attributeは必須です',
             'facility_info.max'  => ':attributeが長すぎます',
             'staff_user_id.required' => ':attributeは必須です',

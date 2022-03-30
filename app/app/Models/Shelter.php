@@ -31,4 +31,14 @@ class Shelter extends Model
     {
         return $this->hasMany(ShelterImage::class);
     }
+
+    public function facilities()
+    {
+        return $this->belongsToMany(Facility::class, 'shelter_facilities', 'shelter_id', 'facility_id')->whereNull('shelter_facilities.deleted_at');
+    }
+
+    public function shelterFacilities()
+    {
+        return $this->hasMany(ShelterFacility::class);
+    }
 }
