@@ -50,8 +50,8 @@ volumes:
   shelter-db:
 networks:
   default:
-    external:
       name: shelter
+      external: true
   container-link:
     name: shelter
     driver: bridge

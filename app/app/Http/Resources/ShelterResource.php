@@ -12,6 +12,7 @@ class ShelterResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'images' => ShelterImageResource::collection($this->shelterImages),
             'name' => $this->name,
             'name_kana' => $this->name_kana,
             'postal_code' => $this->postal_code,

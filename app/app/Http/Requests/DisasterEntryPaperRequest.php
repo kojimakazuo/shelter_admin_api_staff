@@ -13,8 +13,8 @@ class DisasterEntryPaperRequest extends FormRequest
     {
         return [
             'disaster_shelter_id'  => 'required|exists:disaster_shelters,id',
-            'front_image'  => 'required|base64_image',
-            'back_image'  => 'required|base64_image',
+            'front_image'  => 'required|base64|base64_ext_in:jpeg,jpg,png|base64_max:5',
+            'back_image'  => 'required|base64|base64_ext_in:jpeg,jpg,png|base64_max:5',
             'sheet_number'  => 'required|integer',
             'site_type' => [
                 'required',
