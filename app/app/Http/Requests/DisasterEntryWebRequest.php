@@ -17,10 +17,10 @@ class DisasterEntryWebRequest extends FormRequest
                 'required',
                 Rule::in(EntrySiteType::values()),
             ],
-            'temperature' => 'required|numeric',
+            'temperature' => 'nullable|numeric',
             'companions' => 'array',
             'companions.*.id' => 'required|distinct|exists:entry_sheet_web_companions,id',
-            'companions.*.temperature' => 'required|numeric',
+            'companions.*.temperature' => 'nullable|numeric',
         ];
     }
 
@@ -34,12 +34,10 @@ class DisasterEntryWebRequest extends FormRequest
             'title.max'  => ':attributeが長すぎます',
             'site_type.required' => ':attributeは必須です',
             'site_type.in' => ':attributeの形式が正しくありません',
-            'temperature.required' => ':attributeは必須です',
             'temperature.numeric'  => ':attributeは数値で指定してください',
             'companions.*.id.required' => ':attributeは必須です',
             'companions.*.id.distinct' => ':attributeが重複しています',
             'companions.*.id.exists' => ':attributeの指定が正しくありません',
-            'companions.*.temperature.required' => ':attributeは必須です',
             'companions.*.temperature.numeric'  => ':attributeは数値で指定してください',
         ];
     }

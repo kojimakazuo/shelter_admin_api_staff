@@ -31,7 +31,10 @@ class EntrySheetPaper extends Model
 
     public function pre_signed_back_sheet_image_url()
     {
-        return $this->pre_signed_image_url($this->back_sheet_image_url);
+        if (isset($this->back_sheet_image_url)) {
+            return $this->pre_signed_image_url($this->back_sheet_image_url);
+        }
+        return null;
     }
 
     private function pre_signed_image_url($url)
