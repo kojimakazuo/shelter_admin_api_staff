@@ -28,7 +28,7 @@ class Base64ExtIn implements Rule
      */
     public function passes($attribute, $value, $parameters = [])
     {
-        preg_match('/data:image\/(\w+).*;base64,.*/u', $value, $matches);
+        preg_match('/data:image\/(\w+);base64,(.*)/u', $value, $matches);
         if (!isset($matches[1])) return false;
         return in_array($matches[1], $parameters, true);
     }
