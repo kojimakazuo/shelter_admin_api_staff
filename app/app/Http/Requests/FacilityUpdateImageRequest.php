@@ -9,7 +9,7 @@ class FacilityUpdateImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'base64|base64_ext_in:png,svg|base64_max:5',
+            'image' => 'base64|base64_ext_in:png,svg+xml|base64_max:5',
         ];
     }
 

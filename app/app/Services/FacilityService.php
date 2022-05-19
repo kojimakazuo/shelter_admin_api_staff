@@ -73,13 +73,13 @@ class FacilityService
      */
     public function putImage(string $image)
     {
-        preg_match('/data:image\/(\w+).*;base64,(.*)/u', $image, $matches);
+        preg_match('/data:image\/(.*);base64,(.*)/u', $image, $matches);
         $ext = $matches[1];
         $path = "facilities/" . uniqid() . ".$ext"; // e.g. facilities/61fb743602fc8.png
         $contents = base64_decode($matches[2]);
         if (!Storage::disk('s3')->put($path, $contents, [
             'visibility' => 'public',
-            'mimetype' => $ext === 'svg' ? 'image/svg+xml' : null
+            'mimetype' => $ext === 'svg+xml' ? 'image/svg+xml' : null
         ]));
         return $path;
     }
