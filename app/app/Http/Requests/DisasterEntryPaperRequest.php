@@ -35,6 +35,12 @@ class DisasterEntryPaperRequest extends FormRequest
         return [
             'disaster_shelter_id.required' => ':attributeは必須です',
             'disaster_shelter_id.exists' => ':attributeの指定が正しくありません',
+            'front_image.base64' => ':attributeの形式が正しくありません',
+            'front_image.base64_ext_in' => 'サポートされている:attributeの拡張子は:extsです',
+            'front_image.base64_max' => ':attributeの最大サイズは:maxMBです',
+            'back_image.base64' => ':attributeの形式が正しくありません',
+            'back_image.base64_ext_in' => 'サポートされている:attributeの拡張子は:extsです',
+            'back_image.base64_max' => ':attributeの最大サイズは:maxMBです',
             'sheet_number.required' => ':attributeは必須です',
             'sheet_number.integer' => ':attributeは数値で指定してください',
             'title.max'  => ':attributeが長すぎます',
@@ -57,6 +63,8 @@ class DisasterEntryPaperRequest extends FormRequest
     {
         return [
             'disaster_shelter_id' => '災害避難所ID',
+            'front_image' => 'チェックシート(表面)',
+            'back_image' => 'チェックシート(裏面)',
             'sheet_number' => '管理番号',
             'site_type'  => '避難場所',
             'name' => '代表者氏名',
