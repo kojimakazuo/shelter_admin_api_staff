@@ -33,7 +33,7 @@ before('deploy:symlink', 'artisan:migrate');
 after('deploy:update_code', 'change_dir');
 
 task('change_dir', function () {
-    set('release_path', get('release_path') . DIRECTORY_SEPARATOR . 'app');
+    set('release_path', get('release_path') . '/' . 'app');
     run('cd {{release_path}}');
 });
 
