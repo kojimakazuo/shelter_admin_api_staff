@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DisasterController;
 use App\Http\Controllers\DisasterEntryController;
 use App\Http\Controllers\DisasterEntrySheetController;
+use App\Http\Controllers\DisasterShelterStaffsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NativeAppController;
 use App\Http\Controllers\NoticeController;
@@ -50,6 +51,11 @@ Route::group(['middleware' => 'api'], function ($router) {
         Route::post('entries/{id}/out', [DisasterEntryController::class, 'out']);
         Route::post('entries/{id}/in', [DisasterEntryController::class, 'in']);
         Route::post('entries/{id}/exit', [DisasterEntryController::class, 'exit']);
+        Route::get('/current2', [DisasterController::class, 'current']);
+        Route::get('staff/test', [DisasterShelterStaffsController::class, 'test']);
+        Route::get('staff/{shalter_id}', [DisasterShelterStaffsController::class, 'index']);
+        Route::post('staff/{shalter_id}/{id}', [DisasterShelterStaffsController::class, 'update']);    
+        //未実装　Route::delete('staff/close', [DisasterShelterStaffController::class, 'close']);
     });
     Route::group(['prefix' => 'shelters'], function ($router) {
         Route::get('', [ShelterController::class, 'index']);
